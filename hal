@@ -65,7 +65,12 @@
                         <label class="block text-xs font-bold text-slate-300 uppercase">Şifre</label>
                         <button type="button" onclick="openForgotPasswordModal()" class="text-xs font-bold text-emerald-400 hover:underline">Şifremi Unuttum?</button>
                     </div>
-                    <input type="password" id="login-password" required class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl p-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-emerald-500" placeholder="••••••••">
+                    <div class="relative">
+                        <input type="password" id="login-password" required class="w-full bg-slate-800 border border-slate-600 text-white rounded-xl p-3 pr-10 text-sm font-semibold outline-none focus:ring-2 focus:ring-emerald-500" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility('login-password', 'eye-login')" class="absolute right-3 top-3.5 text-slate-400 hover:text-white">
+                            <i id="eye-login" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
                 <button type="submit" id="btn-login-submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black py-3.5 rounded-xl shadow-lg transition text-sm">
                     SİSTEME GİRİŞ YAP
@@ -79,6 +84,26 @@
                 <i class="fa-brands fa-whatsapp text-2xl text-slate-950"></i>
                 <span class="hidden sm:inline pr-1">Üye Olmak İstiyorum</span>
             </button>
+        </div>
+    </div>
+
+    <!-- ÜYELİK SÜRESİ DOLDU (EXPIRED) EKRANI MODALI -->
+    <div id="expired-modal" class="fixed inset-0 bg-slate-950/95 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center border border-slate-200 animate-bounce-short">
+            <div class="text-6xl mb-4">😔</div>
+            <h2 class="text-2xl font-black text-slate-900 mb-2 uppercase tracking-wide">ÜYELİĞİNİZ SONA ERMİŞTİR</h2>
+            <p class="text-sm text-slate-600 font-medium mb-6 leading-relaxed">
+                Değerli kullanıcımız, sistem kullanım süreniz dolmuştur.<br>
+                Bizimle çalışmaya devam etmek ve lisansınızı yenilemek için lütfen yönetici ile iletişime geçiniz.
+            </p>
+            <div class="space-y-3">
+                <button onclick="contactAdminExpired()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3.5 rounded-xl shadow-lg transition text-sm flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> YÖNETİCİ İLE İLETİŞİME GEÇ
+                </button>
+                <button onclick="closeExpiredModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs">
+                    Giriş Ekranına Dön
+                </button>
+            </div>
         </div>
     </div>
 
@@ -264,7 +289,12 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Giriş Şifresi</label>
-                                <input type="password" id="admin-new-password" placeholder="••••••••" required class="w-full border p-2.5 text-xs rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
+                                <div class="relative">
+                                    <input type="password" id="admin-new-password" placeholder="••••••••" required class="w-full border p-2.5 pr-8 text-xs rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
+                                    <button type="button" onclick="togglePasswordVisibility('admin-new-password', 'eye-admin-new')" class="absolute right-2.5 top-2.5 text-slate-400">
+                                        <i id="eye-admin-new" class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">İşletme Adı</label>
@@ -290,23 +320,24 @@
                         </form>
                     </div>
 
-                    <!-- 2. Admin Kendi Giriş Bilgileri & WhatsApp Numarası Değiştirme -->
+                    <!-- 2. Admin Kendi Giriş Şifresi & WhatsApp Numarası Değiştirme -->
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                         <div>
                             <h3 class="font-bold text-slate-800 text-sm mb-3 flex items-center gap-2">
-                                <i class="fa-solid fa-user-shield text-emerald-600"></i> Admin Kendi Şifre / PIN Değiştir
+                                <i class="fa-solid fa-user-shield text-emerald-600"></i> Admin Kendi Şifresini Değiştir
                             </h3>
                             <form onsubmit="handleUpdateAdminSelfInfo(event)" class="space-y-2.5">
                                 <div>
                                     <label class="block text-[11px] font-bold text-slate-600 mb-1">Yeni Admin Şifresi</label>
-                                    <input type="password" id="admin-self-password" required class="w-full border p-2 text-xs rounded-lg outline-none" placeholder="••••••••">
-                                </div>
-                                <div>
-                                    <label class="block text-[11px] font-bold text-slate-600 mb-1">Yeni Admin PIN Kodu (4 Hane)</label>
-                                    <input type="text" id="admin-self-pin" maxlength="4" required class="w-full border p-2 text-xs font-bold text-center rounded-lg outline-none" placeholder="1234">
+                                    <div class="relative">
+                                        <input type="password" id="admin-self-password" required class="w-full border p-2 pr-8 text-xs rounded-lg outline-none" placeholder="••••••••">
+                                        <button type="button" onclick="togglePasswordVisibility('admin-self-password', 'eye-admin-self')" class="absolute right-2 top-2 text-slate-400">
+                                            <i id="eye-admin-self" class="fa-solid fa-eye text-xs"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-lg text-xs">
-                                    Admin Şifre/PIN Güncelle
+                                    Admin Şifresini Güncelle
                                 </button>
                             </form>
                         </div>
@@ -402,8 +433,31 @@
                         </h3>
                         <form onsubmit="handleChangeUserPassword(event)" class="space-y-3">
                             <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Mevcut (Eski) Şifreniz</label>
+                                <div class="relative">
+                                    <input type="password" id="user-old-pass" required class="w-full border p-2.5 pr-8 text-xs rounded-xl outline-none" placeholder="Eski şifreniz">
+                                    <button type="button" onclick="togglePasswordVisibility('user-old-pass', 'eye-user-old')" class="absolute right-2.5 top-2.5 text-slate-400">
+                                        <i id="eye-user-old" class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Yeni Giriş Şifresi</label>
-                                <input type="password" id="user-new-pass" required class="w-full border p-2.5 text-xs rounded-xl outline-none" placeholder="••••••••">
+                                <div class="relative">
+                                    <input type="password" id="user-new-pass" required class="w-full border p-2.5 pr-8 text-xs rounded-xl outline-none" placeholder="••••••••">
+                                    <button type="button" onclick="togglePasswordVisibility('user-new-pass', 'eye-user-new')" class="absolute right-2.5 top-2.5 text-slate-400">
+                                        <i id="eye-user-new" class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Yeni Şifre (Tekrar)</label>
+                                <div class="relative">
+                                    <input type="password" id="user-new-pass-confirm" required class="w-full border p-2.5 pr-8 text-xs rounded-xl outline-none" placeholder="••••••••">
+                                    <button type="button" onclick="togglePasswordVisibility('user-new-pass-confirm', 'eye-user-new-confirm')" class="absolute right-2.5 top-2.5 text-slate-400">
+                                        <i id="eye-user-new-confirm" class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                </div>
                             </div>
                             <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-xl text-xs">
                                 Şifreyi Güncelle
@@ -421,6 +475,10 @@
                             <div>
                                 <label class="block text-xs font-bold text-slate-600 mb-1">Yeni 4 Haneli Sayısal PIN Kodu</label>
                                 <input type="text" id="user-new-pin" maxlength="4" required class="w-full border p-2.5 text-xs font-bold text-center rounded-xl outline-none" placeholder="1234">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Yeni PIN Kodu (Tekrar)</label>
+                                <input type="text" id="user-new-pin-confirm" maxlength="4" required class="w-full border p-2.5 text-xs font-bold text-center rounded-xl outline-none" placeholder="1234">
                             </div>
                             <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs">
                                 PIN Kodunu Güncelle
@@ -947,6 +1005,23 @@
             return days > 0 ? days : 0;
         }
 
+        // ŞİFRE GÖSTER / GİZLE (EYE TOGGLE)
+        function togglePasswordVisibility(inputId, eyeIconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(eyeIconId);
+            if(!input || !icon) return;
+
+            if(input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
             const uInput = document.getElementById('login-username').value.trim().toLowerCase();
@@ -990,7 +1065,7 @@
                 if(!found.isAdmin) {
                     const daysLeft = calculateDaysLeft(found.expiresAt);
                     if(daysLeft <= 0) {
-                        alert('Abonelik kullanım süreniz dolmuştur!\nLütfen uzatmak için yöneticinizle iletişime geçiniz.');
+                        showExpiredModal();
                         return;
                     }
                 }
@@ -1003,6 +1078,22 @@
             } finally {
                 if(btn) { btn.innerText = 'SİSTEME GİRİŞ YAP'; btn.disabled = false; }
             }
+        }
+
+        function showExpiredModal() {
+            document.getElementById('expired-modal').classList.remove('hidden');
+        }
+
+        function closeExpiredModal() {
+            document.getElementById('expired-modal').classList.add('hidden');
+        }
+
+        function contactAdminExpired() {
+            const uInput = document.getElementById('login-username').value.trim();
+            const phoneNum = getAdminWhatsappPhone();
+            const msg = encodeURIComponent(`Merhaba, '${uInput}' kullanıcı adlı Hal Hesap üyeliğimin süresi sona erdi. Lisansımı yenilemek ve uzatmak istiyorum.`);
+            window.open(`https://wa.me/${phoneNum}?text=${msg}`, '_blank');
+            closeExpiredModal();
         }
 
         function startUserSession() {
@@ -1226,11 +1317,24 @@
             if(tabId === 'user-ayarlar') renderSettingsTuccarList();
         }
 
-        // KULLANICI KENDİ ŞİFRE & PIN DEĞİŞTİRME
+        // KULLANICI KENDİ ŞİFRE & PIN DEĞİŞTİRME (ESKİ ŞİFRE VE TEKRAR KONTROLLÜ)
         function handleChangeUserPassword(e) {
             e.preventDefault();
+            const oldPass = document.getElementById('user-old-pass').value;
             const newPass = document.getElementById('user-new-pass').value;
-            if(!newPass) return;
+            const newPassConfirm = document.getElementById('user-new-pass-confirm').value;
+
+            if(!oldPass || !newPass || !newPassConfirm) { alert('Lütfen tüm alanları doldurunuz!'); return; }
+
+            if(oldPass !== currentUser.password) {
+                alert('Mevcut (eski) şifrenizi yanlış girdiniz!');
+                return;
+            }
+
+            if(newPass !== newPassConfirm) {
+                alert('Yeni şifreler birbirleriyle eşleşmiyor!');
+                return;
+            }
 
             const users = getUsers();
             const found = users.find(u => u.username === currentUser.username);
@@ -1238,7 +1342,9 @@
                 found.password = newPass;
                 currentUser.password = newPass;
                 localStorage.setItem(GLOBAL_USERS_KEY, JSON.stringify(users));
+                document.getElementById('user-old-pass').value = '';
                 document.getElementById('user-new-pass').value = '';
+                document.getElementById('user-new-pass-confirm').value = '';
                 alert('Giriş şifreniz başarıyla güncellendi!');
             }
         }
@@ -1246,7 +1352,10 @@
         function handleChangeUserPin(e) {
             e.preventDefault();
             const newPin = document.getElementById('user-new-pin').value;
+            const newPinConfirm = document.getElementById('user-new-pin-confirm').value;
+
             if(newPin.length !== 4) { alert('PIN Kodu 4 haneli sayı olmalıdır!'); return; }
+            if(newPin !== newPinConfirm) { alert('Girilen PIN kodları eşleşmiyor!'); return; }
 
             const users = getUsers();
             const found = users.find(u => u.username === currentUser.username);
@@ -1255,6 +1364,7 @@
                 currentUser.pin = newPin;
                 localStorage.setItem(GLOBAL_USERS_KEY, JSON.stringify(users));
                 document.getElementById('user-new-pin').value = '';
+                document.getElementById('user-new-pin-confirm').value = '';
                 alert('PIN Kodunuz başarıyla güncellendi!');
             }
         }
@@ -1303,8 +1413,13 @@
                             <input type="text" id="edit-uname-${idx}" value="${u.username}" class="border p-1 rounded text-xs font-bold w-20">
                         </td>
                         <td class="p-2.5 space-y-1">
-                            <input type="text" id="edit-pass-${idx}" value="${u.password}" class="border p-1 rounded text-[11px] w-20 block" title="Şifre">
-                            <input type="text" id="edit-pin-${idx}" maxlength="4" value="${u.pin || '1234'}" class="border p-1 rounded text-[11px] font-bold text-center w-20 block" title="PIN">
+                            <div class="relative">
+                                <input type="password" id="edit-pass-${idx}" value="${u.password}" class="border p-1 pr-6 rounded text-[11px] w-24 block" title="Şifre">
+                                <button type="button" onclick="togglePasswordVisibility('edit-pass-${idx}', 'eye-tbl-${idx}')" class="absolute right-1 top-1 text-slate-400">
+                                    <i id="eye-tbl-${idx}" class="fa-solid fa-eye text-[10px]"></i>
+                                </button>
+                            </div>
+                            <input type="text" id="edit-pin-${idx}" maxlength="4" value="${u.pin || '1234'}" class="border p-1 rounded text-[11px] font-bold text-center w-24 block" title="PIN">
                         </td>
                         <td class="p-2.5">
                             <span class="${daysBadgeClass} font-black text-xs px-2.5 py-1 rounded-full inline-block mb-1">
@@ -1360,22 +1475,19 @@
         function handleUpdateAdminSelfInfo(e) {
             e.preventDefault();
             const newPass = document.getElementById('admin-self-password').value;
-            const newPin = document.getElementById('admin-self-pin').value;
 
-            if(!newPass || newPin.length !== 4) { alert('Lütfen geçerli şifre ve 4 haneli PIN giriniz!'); return; }
+            if(!newPass) { alert('Lütfen geçerli bir şifre giriniz!'); return; }
 
             const users = getUsers();
             const admin = users.find(u => u.isAdmin);
             if(admin) {
                 admin.password = newPass;
-                admin.pin = newPin;
                 if(currentUser && currentUser.isAdmin) {
                     currentUser.password = newPass;
-                    currentUser.pin = newPin;
                 }
                 localStorage.setItem(GLOBAL_USERS_KEY, JSON.stringify(users));
                 document.getElementById('admin-self-password').value = '';
-                alert('Admin giriş şifreniz ve PIN kodunuz başarıyla güncellendi!');
+                alert('Admin giriş şifreniz başarıyla güncellendi!');
             }
         }
 
