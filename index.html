@@ -378,7 +378,7 @@
                                             <input type="number" inputmode="numeric" id="alim-kasa-adet" min="1" value="10" oninput="markAlimFormDirty(); calculateNetKilo();" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm font-bold text-center focus:ring-2 focus:ring-emerald-500 outline-none">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-600 mb-1">Müstahsil Derzi (Kg)</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1">Müstahsil Darası (Kg)</label>
                                             <input type="number" id="alim-toplam-dara" readonly class="w-full bg-slate-200 text-slate-700 font-bold text-center border border-slate-300 rounded-lg p-2.5 text-sm" value="0">
                                         </div>
                                     </div>
@@ -390,7 +390,7 @@
                                         <input type="number" inputmode="decimal" id="alim-brut-kilo" step="0.01" value="250" oninput="markAlimFormDirty(); calculateNetKilo();" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-extrabold focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="0.0">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-emerald-700 mb-1">Net Kilo (Derz Düşük)</label>
+                                        <label class="block text-xs font-bold text-emerald-700 mb-1">Net Kilo (Dara Düşük)</label>
                                         <input type="number" id="alim-net-kilo" readonly class="w-full bg-emerald-50 text-emerald-800 text-lg sm:text-xl font-black border border-emerald-300 rounded-xl p-2.5 text-center" value="0">
                                     </div>
                                 </div>
@@ -442,7 +442,7 @@
                                 <tbody>
                                     <tr>
                                         <td id="rec-urun" class="py-1.5 font-bold">---</td>
-                                        <td id="rec-kasa-detay" class="py-1.5 text-center font-semibold">10 Ad (20 Kg Derz)</td>
+                                        <td id="rec-kasa-detay" class="py-1.5 text-center font-semibold">10 Ad (20 Kg Dara)</td>
                                         <td id="rec-net-kilo" class="py-1.5 text-right font-extrabold">0 Kg</td>
                                     </tr>
                                 </tbody>
@@ -450,7 +450,7 @@
 
                             <div class="border-t border-dashed border-slate-400 pt-2.5 rec-sub space-y-1.5">
                                 <div class="flex justify-between"><span>Brüt Kilo:</span> <span id="rec-brut" class="font-bold">0 Kg</span></div>
-                                <div class="flex justify-between"><span>Kasa Derzi:</span> <span id="rec-dara" class="font-bold">0 Kg</span></div>
+                                <div class="flex justify-between"><span>Kasa Darası:</span> <span id="rec-dara" class="font-bold">0 Kg</span></div>
                                 <div class="flex justify-between rec-net-big pt-1.5 border-t border-slate-300"><span>NET KİLO:</span> <span id="rec-net-total">0 Kg</span></div>
                             </div>
 
@@ -486,7 +486,7 @@
                             <h2 class="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-envelope-open-text text-amber-600"></i> Parti Yönetimi & Mektup Fiyatlandırma
                             </h2>
-                            <p class="text-xs text-slate-500">Tüccar mektubunda tüccar derzi uygulanır; aradaki kilo farkı doğal olarak mektuba yansır.</p>
+                            <p class="text-xs text-slate-500">Tüccar mektubunda tüccar darası uygulanır; aradaki kilo farkı doğal olarak mektuba yansır.</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 w-full sm:w-auto">
@@ -727,7 +727,7 @@
                         <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
                             <span class="text-[11px] font-bold text-emerald-700 uppercase">Toplam Brüt Hal Kârı</span>
                             <div id="summary-net-kar" class="text-2xl sm:text-3xl font-black text-emerald-800 mt-1">0 TL</div>
-                            <span class="text-[10px] text-emerald-600">Ciro - Maliyet (Derz farkı dahil)</span>
+                            <span class="text-[10px] text-emerald-600">Ciro - Maliyet (Dara farkı dahil)</span>
                         </div>
                     </div>
                 </div>
@@ -858,12 +858,12 @@
                     </div>
 
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-box text-amber-600 mr-1"></i> Kasa Derzleri</h3>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-box text-amber-600 mr-1"></i> Kasa Daraları</h3>
                         <form onsubmit="handleAddKasa(event)" class="space-y-2 mb-3">
                             <input type="text" id="def-kasa-name" placeholder="Kasa Adı (Örn: Sepet Kasa)" required class="w-full border p-2 text-xs rounded-lg outline-none">
                             <div class="grid grid-cols-2 gap-1.5">
-                                <input type="number" inputmode="decimal" step="0.01" id="def-kasa-mustahsil-derz" placeholder="Müstahsil Derz (2)" required class="w-full border p-2 text-xs rounded-lg outline-none">
-                                <input type="number" inputmode="decimal" step="0.01" id="def-kasa-tuccar-derz" placeholder="Tüccar Derz (1.5)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                                <input type="number" inputmode="decimal" step="0.01" id="def-kasa-mustahsil-derz" placeholder="Müstahsil Dara (2)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                                <input type="number" inputmode="decimal" step="0.01" id="def-kasa-tuccar-derz" placeholder="Tüccar Dara (1.5)" required class="w-full border p-2 text-xs rounded-lg outline-none">
                             </div>
                             <button type="submit" class="w-full bg-slate-800 text-white font-bold py-1.5 rounded-lg text-xs">Ekle</button>
                         </form>
@@ -1073,7 +1073,7 @@
             return getMustahsilDerzBirim(kasaObj);
         }
 
-        // Mektup kaleminin tüccar derzi düşülmüş net kilosunu döndürür
+        // Mektup kaleminin tüccar darası düşülmüş net kilosunu döndürür
         function getMektupItemNetKilo(item) {
             const adet = parseFloat(item.kasa_adet) || 0;
             const brut = parseFloat(item.brut);
@@ -1586,7 +1586,7 @@
             display.value = `${getAktifPartiNo(tuccar)}. Parti (Aktif)`;
         }
 
-        // Mal alım fişinde sadece MÜSTAHSİL DERZİ uygulanır ve fişte görünür
+        // Mal alım fişinde sadece MÜSTAHSİL DARASI uygulanır ve fişte görünür
         function calculateNetKilo() {
             const kasaId = document.getElementById('alim-kasa').value;
             const adet = parseFloat(document.getElementById('alim-kasa-adet').value) || 0;
@@ -1608,7 +1608,7 @@
             document.getElementById('rec-parti').innerText = document.getElementById('alim-parti-display').value || '---';
             document.getElementById('rec-mustahsil').innerText = document.getElementById('alim-mustahsil').value || '---';
             document.getElementById('rec-urun').innerText = document.getElementById('alim-urun').value || '---';
-            document.getElementById('rec-kasa-detay').innerText = `${adet} Ad (${formatDecimal(totalDara)} Kg Derz)`;
+            document.getElementById('rec-kasa-detay').innerText = `${adet} Ad (${formatDecimal(totalDara)} Kg Dara)`;
             document.getElementById('rec-brut').innerText = formatDecimal(brut) + ' Kg';
             document.getElementById('rec-dara').innerText = formatDecimal(totalDara) + ' Kg';
             document.getElementById('rec-net-kilo').innerText = formatDecimal(net) + ' Kg';
@@ -1779,7 +1779,7 @@
             const waPhone = formatPhoneForWhatsApp(phone);
             const firmaAdi = state.firma.firma_adi || 'HAL HESAP';
             const firmaTel = state.firma.telefon ? `\n📞 ${state.firma.telefon}` : '';
-            const msg = `*${firmaAdi}* - MAL ALIM FİŞİ${firmaTel}\n━━━━━━━━━━━━━━━━━━━━\n🧾 *Fiş No:* #${alim.id}\n📅 *Tarih:* ${alim.tarih}\n👨‍🌾 *Müstahsil:* ${alim.mustahsil}\n🚛 *Sevk:* ${alim.tuccar} (${alim.parti})\n━━━━━━━━━━━━━━━━━━━━\n🍅 *Ürün:* ${alim.urun}\n📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Derz)\n⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg\n✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*\n━━━━━━━━━━━━━━━━━━━━\n_Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
+            const msg = `*${firmaAdi}* - MAL ALIM FİŞİ${firmaTel}\n━━━━━━━━━━━━━━━━━━━━\n🧾 *Fiş No:* #${alim.id}\n📅 *Tarih:* ${alim.tarih}\n👨‍🌾 *Müstahsil:* ${alim.mustahsil}\n🚛 *Sevk:* ${alim.tuccar} (${alim.parti})\n━━━━━━━━━━━━━━━━━━━━\n🍅 *Ürün:* ${alim.urun}\n📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Dara)\n⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg\n✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*\n━━━━━━━━━━━━━━━━━━━━\n_Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
 
             const gonderimTarihi = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
             await db.from('alimlar').update({ whatsapp_gonderildi: true, whatsapp_tarih: gonderimTarihi }).eq('id', alim.id);
@@ -1818,7 +1818,7 @@
             }).join('');
         }
 
-        // PARTİ & MEKTUP (Tüccar derzi düşülmüş net kilo üzerinden hesaplanır)
+        // PARTİ & MEKTUP (Tüccar darası düşülmüş net kilo üzerinden hesaplanır)
         function renderMektupTable() {
             const selectedTuccar = document.getElementById('mektup-tuccar-select').value;
             const partiDisplay = document.getElementById('mektup-parti-display');
@@ -2841,8 +2841,8 @@
                 const currentMDerz = getMustahsilDerzBirim(item);
                 const currentTDerz = getTuccarDerzBirim(item);
                 const newName = prompt('Kasa Adı:', item.name);
-                const newMDerz = parseFloat(prompt('Müstahsil Derzi (Kg, Örn: 2):', formatDecimal(currentMDerz)));
-                const newTDerz = parseFloat(prompt('Tüccar Derzi (Kg, Örn: 1.5):', formatDecimal(currentTDerz)));
+                const newMDerz = parseFloat(prompt('Müstahsil Darası (Kg, Örn: 2):', formatDecimal(currentMDerz)));
+                const newTDerz = parseFloat(prompt('Tüccar Darası (Kg, Örn: 1.5):', formatDecimal(currentTDerz)));
                 if (newName && !isNaN(newMDerz) && !isNaN(newTDerz)) {
                     const upd = { name: newName.trim(), dara: newMDerz, mustahsil_derzi: newMDerz, tuccar_derzi: newTDerz };
                     const { error } = await db.from('kasalar').update(upd).eq('id', id);
@@ -2872,7 +2872,7 @@
             document.getElementById('list-kasa').innerHTML = state.kasalar.map(k => {
                 const mDerz = getMustahsilDerzBirim(k);
                 const tDerz = getTuccarDerzBirim(k);
-                return `<li class="py-1 flex justify-between items-center gap-2"><span>${escapeHtml(k.name)} <small class="text-slate-500">(M: ${formatDecimal(mDerz)} / T: ${formatDecimal(tDerz)} Kg)</small></span><span class="shrink-0"><button onclick="editTanim('kasalar', ${k.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`;
+                return `<li class="py-1 flex justify-between items-center gap-2"><span>${escapeHtml(k.name)} <small class="text-slate-500">(M: ${formatDecimal(mDerz)} / T: ${formatDecimal(tDerz)} Kg Dara)</small></span><span class="shrink-0"><button onclick="editTanim('kasalar', ${k.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`;
             }).join('');
         }
     </script>
