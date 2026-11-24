@@ -4,27 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HAL HESAP - Multi-Tenant Hal Otomasyon Portalı</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; -webkit-tap-highlight-color: transparent; }
-        
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Login Arka Planı */
         .login-bg {
             background-image: linear-gradient(rgba(9, 14, 23, 0.82), rgba(9, 14, 23, 0.88)),
                               url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
             background-size: cover;
             background-position: center;
         }
-
-        /* 80mm Termal Fiş Görünümü */
         .thermal-receipt {
             width: 100%;
             max-width: 340px;
@@ -37,22 +30,10 @@
             font-size: 13.5px;
             line-height: 1.45;
         }
-        .thermal-receipt .rec-sub {
-            font-size: 12.5px;
-        }
-        .thermal-receipt .rec-title {
-            font-size: 16px;
-            font-weight: 800;
-        }
-        .thermal-receipt .rec-net-big {
-            font-size: 16.5px;
-            font-weight: 900;
-        }
-        .thermal-receipt .rec-footer {
-            font-size: 12px;
-        }
-
-        /* Antetli Kağıt (Mektup) Görünümü */
+        .thermal-receipt .rec-sub { font-size: 12.5px; }
+        .thermal-receipt .rec-title { font-size: 16px; font-weight: 800; }
+        .thermal-receipt .rec-net-big { font-size: 16.5px; font-weight: 900; }
+        .thermal-receipt .rec-footer { font-size: 12px; }
         .antet-paper {
             width: 100%;
             background: #fff;
@@ -62,76 +43,35 @@
             color: #0f172a;
             font-family: 'Inter', sans-serif;
         }
-
-        /* Akıllı Yazdırma Kuralları */
         @media print {
             body * { visibility: hidden; }
             .no-print { display: none !important; }
-
             body.print-mode-receipt #receipt-print-area,
-            body.print-mode-receipt #receipt-print-area * {
-                visibility: visible;
-            }
+            body.print-mode-receipt #receipt-print-area * { visibility: visible; }
             body.print-mode-receipt #receipt-print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 80mm;
-                max-width: 80mm;
-                padding: 4mm;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: 13px;
-                line-height: 1.45;
-                font-weight: 600;
-                color: #000;
-                background: #fff;
-                box-shadow: none;
-                border: none;
+                position: absolute; left: 0; top: 0; width: 80mm; max-width: 80mm;
+                padding: 4mm; font-family: 'Courier New', Courier, monospace;
+                font-size: 13px; line-height: 1.45; font-weight: 600; color: #000; background: #fff;
+                box-shadow: none; border: none;
             }
-            body.print-mode-receipt #receipt-print-area .rec-title {
-                font-size: 15.5px;
-                font-weight: 900;
-            }
-            body.print-mode-receipt #receipt-print-area .rec-sub {
-                font-size: 12.5px;
-            }
-            body.print-mode-receipt #receipt-print-area .rec-net-big {
-                font-size: 16px;
-                font-weight: 900;
-            }
-            body.print-mode-receipt #receipt-print-area .rec-footer {
-                font-size: 12px;
-                font-weight: 700;
-            }
-
+            body.print-mode-receipt #receipt-print-area .rec-title { font-size: 15.5px; font-weight: 900; }
+            body.print-mode-receipt #receipt-print-area .rec-sub { font-size: 12.5px; }
+            body.print-mode-receipt #receipt-print-area .rec-net-big { font-size: 16px; font-weight: 900; }
+            body.print-mode-receipt #receipt-print-area .rec-footer { font-size: 12px; font-weight: 700; }
             body.print-mode-letter #mektup-modal-content,
-            body.print-mode-letter #mektup-modal-content * {
-                visibility: visible;
-            }
+            body.print-mode-letter #mektup-modal-content * { visibility: visible; }
             body.print-mode-letter #mektup-modal-content {
-                position: fixed;
-                left: 0;
-                top: 0;
-                width: 100%;
-                max-width: 100%;
-                padding: 12mm 15mm;
-                margin: 0;
-                background: #fff;
-                color: #000;
-                box-shadow: none;
-                border: none;
+                position: fixed; left: 0; top: 0; width: 100%; max-width: 100%;
+                padding: 12mm 15mm; margin: 0; background: #fff; color: #000;
+                box-shadow: none; border: none;
             }
         }
     </style>
 </head>
 <body class="text-slate-800 print-mode-receipt">
 
-    <!-- ===================================================================== -->
-    <!-- 1. GİRİŞ EKRANI (LOGIN VIEW)                                          -->
-    <!-- ===================================================================== -->
+    <!-- 1. GİRİŞ EKRANI -->
     <div id="login-screen" class="min-h-screen login-bg flex flex-col justify-between p-4 sm:p-6 relative">
-        
-        <!-- Sol Üst: Bilgi & Hakkımızda -->
         <div class="flex justify-between items-center">
             <button onclick="toggleInfoModal(true)" class="bg-slate-800/80 hover:bg-slate-700/90 backdrop-blur-md text-slate-200 border border-slate-600/50 px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition shadow-lg">
                 <i class="fa-solid fa-bars text-emerald-400"></i> Bilgi & Hakkımızda
@@ -141,7 +81,6 @@
             </span>
         </div>
 
-        <!-- Orta: Giriş Kartı -->
         <div class="w-full max-w-md mx-auto my-auto">
             <div class="bg-[#0f172a]/90 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-7 sm:p-9 shadow-2xl">
                 <div class="flex flex-col items-center text-center mb-7">
@@ -159,7 +98,6 @@
                         <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">KULLANICI ADI</label>
                         <input type="text" id="login-username" required autocomplete="username" placeholder="Kullanıcı adınızı girin" class="w-full bg-slate-100 text-slate-900 font-semibold rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500">
                     </div>
-
                     <div>
                         <div class="flex justify-between items-center mb-1.5">
                             <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider">ŞİFRE</label>
@@ -174,7 +112,6 @@
                             </button>
                         </div>
                     </div>
-
                     <button type="submit" id="btn-login-submit" class="w-full bg-emerald-500 hover:bg-emerald-400 active:scale-[0.99] text-slate-950 font-black py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition text-sm tracking-wide mt-2">
                         SİSTEME GİRİŞ YAP
                     </button>
@@ -182,7 +119,6 @@
             </div>
         </div>
 
-        <!-- Sol Alt: Üye Olmak İstiyorum (WhatsApp) -->
         <div class="flex justify-between items-center">
             <button type="button" onclick="openWhatsAppSupport('Merhaba, Hal Hesap otomasyon sistemi için üyelik ve lisans bilgisi almak istiyorum.')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold px-4 py-2.5 rounded-full text-xs shadow-lg flex items-center gap-2 transition">
                 <i class="fa-brands fa-whatsapp text-base"></i> Üye Olmak İstiyorum
@@ -191,9 +127,7 @@
         </div>
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- SİSTEM & BİLGİLENDİRME MODALI                                         -->
-    <!-- ===================================================================== -->
+    <!-- BİLGİ MODALI -->
     <div id="info-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200">
             <div class="flex justify-between items-start pb-4 border-b border-slate-100 mb-4">
@@ -208,52 +142,29 @@
                 </div>
                 <button onclick="toggleInfoModal(false)" class="text-slate-400 hover:text-slate-700 text-2xl leading-none">&times;</button>
             </div>
-
-            <div class="space-y-3">
+            <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
                 <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
-                    <h4 class="text-xs sm:text-sm font-extrabold text-emerald-700 flex items-center gap-2 mb-1.5">
-                        <i class="fa-solid fa-boxes-packing"></i> Hakkımızda & Tanıtım
-                    </h4>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        Hal Hesap; hal komisyoncuları, tüccarlar ve müstahsiller için geliştirilmiş bulut tabanlı yeni nesil kantar, cari ve parti yönetim sistemidir.
-                    </p>
+                    <h4 class="text-xs sm:text-sm font-extrabold text-emerald-700 mb-1">Hakkımızda & Tanıtım</h4>
+                    <p>Hal Hesap; hal komisyoncuları, tüccarlar ve müstahsiller için geliştirilmiş bulut tabanlı kantar, cari ve parti yönetim sistemidir.</p>
                 </div>
-
                 <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
-                    <h4 class="text-xs sm:text-sm font-extrabold text-blue-700 flex items-center gap-2 mb-1.5">
-                        <i class="fa-solid fa-bullseye"></i> Kullanım Amaçları & Avantajları
-                    </h4>
-                    <ul class="text-xs text-slate-600 space-y-1 leading-relaxed">
+                    <h4 class="text-xs sm:text-sm font-extrabold text-blue-700 mb-1">Kullanım Amaçları</h4>
+                    <ul class="space-y-1">
                         <li>* 80mm Termal Kantar Fişi Kesme & WhatsApp Fiş Gönderimi</li>
-                        <li>* A4 Resmi Parti Mektubu Düzenleme, Yazdırma & WhatsApp İletimi</li>
+                        <li>* A4 Resmi Parti Mektubu Düzenleme & Yazdırma</li>
                         <li>* Müstahsil ve Tüccar Borç/Alacak & Vadeli Çek Takibi</li>
-                        <li>* Detaylı Hal Kâr / Zarar Analitiği</li>
+                        <li>* Anlık Güncel Kâr / Zarar Analitiği</li>
                     </ul>
                 </div>
-
-                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
-                    <h4 class="text-xs sm:text-sm font-extrabold text-amber-700 flex items-center gap-2 mb-1.5">
-                        <i class="fa-solid fa-headset"></i> İletişim & Destek
-                    </h4>
-                    <p class="text-xs text-slate-600 leading-relaxed">
-                        Sistem lisans talepleri, teknik destek ve kurulum için sol alttaki WhatsApp butonunu kullanabilir veya yönetici ile direkt iletişime geçebilirsiniz.
-                    </p>
-                </div>
             </div>
-
             <div class="mt-5 text-right">
-                <button onclick="toggleInfoModal(false)" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition">
-                    Kapat
-                </button>
+                <button onclick="toggleInfoModal(false)" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition">Kapat</button>
             </div>
         </div>
     </div>
 
-    <!-- ===================================================================== -->
-    <!-- 2. ANA UYGULAMA EKRANI (DASHBOARD VIEW)                               -->
-    <!-- ===================================================================== -->
+    <!-- 2. ANA UYGULAMA EKRANI -->
     <div id="app-screen" class="hidden pb-12">
-        <!-- Top Bar Navigation -->
         <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-40 no-print">
             <div class="max-w-7xl mx-auto px-3 py-2.5">
                 <div class="flex items-center justify-between mb-2">
@@ -276,14 +187,12 @@
                     </div>
                 </div>
 
-                <!-- Sadece Admin Menüsü -->
                 <nav id="admin-nav" class="hidden flex gap-2 py-1 text-xs font-semibold">
                     <button class="whitespace-nowrap px-4 py-2 rounded-xl bg-amber-600 text-white font-bold shadow flex items-center gap-1.5">
                         <i class="fa-solid fa-users-gear"></i> Sistem Yönetim Paneli
                     </button>
                 </nav>
 
-                <!-- Normal Esnaf Menüsü -->
                 <nav id="tenant-nav" class="hidden flex gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-semibold">
                     <button onclick="switchTab('mal-alim')" id="tab-mal-alim" class="tab-btn whitespace-nowrap px-3.5 py-2 rounded-xl transition active bg-emerald-600 text-white shadow">
                         <i class="fa-solid fa-truck-ramp-box mr-1"></i> Mal Alım (Fiş)
@@ -307,10 +216,9 @@
             </div>
         </header>
 
-        <!-- Main Content Container -->
         <main class="max-w-7xl mx-auto p-3 sm:p-6">
 
-            <!-- ================= 0. SÜPER ADMİN PANELİ ================= -->
+            <!-- 0. SÜPER ADMİN PANELİ -->
             <section id="sec-super-admin" class="tab-content hidden space-y-5 no-print">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
                     <div class="lg:col-span-4 space-y-5">
@@ -336,7 +244,7 @@
                                     <input type="tel" inputmode="numeric" id="adm-new-phone" placeholder="Örn: 0532 123 45 67" class="w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 text-sm font-semibold rounded-xl outline-none focus:border-amber-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-600 mb-1">İlk Lisans Süresi (Kullandırım Ay)</label>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">İlk Lisans Süresi</label>
                                     <select id="adm-new-days" class="w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 text-sm font-semibold rounded-xl outline-none focus:border-amber-500">
                                         <option value="15">15 Gün (Deneme)</option>
                                         <option value="30">1 Ay (30 Gün)</option>
@@ -357,10 +265,7 @@
                                 <i class="fa-solid fa-user-shield text-emerald-600"></i> Admin Kendi Şifresini Değiştir
                             </h3>
                             <form onsubmit="handleAdminChangeOwnPass(event)" class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-600 mb-1">Yeni Admin Şifresi</label>
-                                    <input type="password" id="adm-own-new-pass" required minlength="6" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 text-sm rounded-xl outline-none focus:border-slate-800">
-                                </div>
+                                <input type="password" id="adm-own-new-pass" required minlength="6" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 text-sm rounded-xl outline-none">
                                 <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm transition">
                                     Admin Şifresini Güncelle
                                 </button>
@@ -371,9 +276,8 @@
                             <h3 class="text-sm font-extrabold text-slate-800 mb-1.5 flex items-center gap-2">
                                 <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i> Sistem WhatsApp Destek Hattı
                             </h3>
-                            <p class="text-[11px] text-slate-500 mb-3">Başvuru ve şifre sıfırlama mesajlarının yönlendirileceği telefon numarası:</p>
                             <form onsubmit="handleSaveWhatsAppPhone(event)" class="space-y-2.5">
-                                <input type="tel" inputmode="numeric" id="adm-whatsapp-phone" required placeholder="905454220710" class="w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 text-sm font-bold rounded-xl outline-none focus:border-emerald-500">
+                                <input type="tel" inputmode="numeric" id="adm-whatsapp-phone" required placeholder="905454220710" class="w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 text-sm font-bold rounded-xl outline-none">
                                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs sm:text-sm transition">
                                     WhatsApp Numarasını Kaydet
                                 </button>
@@ -382,18 +286,15 @@
                     </div>
 
                     <div class="lg:col-span-8 bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b border-slate-100">
+                        <div class="flex justify-between items-center gap-2 mb-4 pb-3 border-b border-slate-100">
                             <div>
-                                <h2 class="text-base sm:text-lg font-extrabold text-slate-800 flex items-center gap-2">
-                                    <i class="fa-solid fa-users text-slate-700"></i> Müşteri Lisans, Şifre & Kullanıcı Yönetimi
-                                </h2>
-                                <p class="text-xs text-slate-500 mt-0.5">Müşterinin mevcut şifresini tek tıkla WhatsApp'tan gönderebilir, süre ekleyip çıkarabilirsiniz.</p>
+                                <h2 class="text-base sm:text-lg font-extrabold text-slate-800">Müşteri Lisans, Şifre & Kullanıcı Yönetimi</h2>
+                                <p class="text-xs text-slate-500 mt-0.5">Müşteri bilgilerini gönderebilir, süre ekleyip çıkarabilirsiniz.</p>
                             </div>
                             <button onclick="loadAdminPanelData()" class="text-xs font-bold text-amber-700 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg transition">
                                 <i class="fa-solid fa-rotate mr-1"></i> Listeyi Yenile
                             </button>
                         </div>
-
                         <div class="overflow-x-auto -mx-5 sm:mx-0">
                             <table class="w-full text-xs sm:text-sm text-left min-w-[700px]">
                                 <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] font-extrabold tracking-wider">
@@ -411,7 +312,7 @@
                 </div>
             </section>
 
-            <!-- ================= 1. MAL ALIM (FİŞ KESME) EKRANI ================= -->
+            <!-- 1. MAL ALIM (FİŞ KESME) -->
             <section id="sec-mal-alim" class="tab-content block">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
                     <div class="lg:col-span-7 space-y-4 no-print">
@@ -428,7 +329,6 @@
                                 </div>
                             </div>
 
-                            <!-- Aktif Kayıtlı Fiş Bilgilendirme Şeridi (Çift Kayıt Önleyici) -->
                             <div id="alim-saved-banner" class="hidden mb-3.5 p-2.5 bg-emerald-50 border border-emerald-300 rounded-xl flex justify-between items-center text-xs">
                                 <span class="font-bold text-emerald-900">
                                     <i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> Fiş #<span id="alim-saved-id"></span> kaydedildi. Tekrar basarsanız yeni kayıt açılmaz, aynı fiş gönderilir.
@@ -506,7 +406,6 @@
                             </form>
                         </div>
 
-                        <!-- Son Kesilen Fişler Listesi & WhatsApp Takip -->
                         <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
                             <h3 class="text-sm font-extrabold text-slate-800 mb-3 flex items-center gap-2">
                                 <i class="fa-solid fa-receipt text-emerald-600"></i> Son Kesilen Mal Alım Fişleri
@@ -560,7 +459,6 @@
                             </div>
                         </div>
 
-                        <!-- Fiş Önizleme Altı: Hızlı Müstahsil Ekleme Kartı -->
                         <div class="w-full max-w-[340px] bg-white p-4 rounded-2xl shadow-sm border border-purple-200 no-print">
                             <div class="flex items-center justify-between mb-2.5">
                                 <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
@@ -580,7 +478,7 @@
                 </div>
             </section>
 
-            <!-- ================= 2. PARTİ & MEKTUP KESME EKRANI ================= -->
+            <!-- 2. PARTİ & MEKTUP KESME -->
             <section id="sec-mektup-parti" class="tab-content hidden space-y-4 no-print">
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-slate-100">
@@ -631,7 +529,7 @@
                 </div>
             </section>
 
-            <!-- ================= 3. TÜCCAR CARİ HESABI & VADELİ ÇEK TAHSİLAT ================= -->
+            <!-- 3. TÜCCAR CARİ HESABI -->
             <section id="sec-tuccar-cari" class="tab-content hidden space-y-4 no-print">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
                     <div class="lg:col-span-5 space-y-4">
@@ -649,7 +547,6 @@
                             </div>
                         </div>
 
-                        <!-- Tahsilat / Ödeme Al -->
                         <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
                             <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
                                 <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Tahsilat / Çek Al
@@ -676,7 +573,6 @@
                                         <i class="fa-regular fa-calendar-check mr-1"></i> Çek Vade Tarihi *
                                     </label>
                                     <input type="date" id="tuccar-cek-vade" class="w-full bg-white border border-amber-300 rounded-lg p-2 text-sm font-bold text-slate-900 outline-none focus:ring-2 focus:ring-amber-500">
-                                    <p class="text-[10px] text-amber-700 mt-1">Bu çek tüccarın bakiyesinden düşülür ve Kâr/Zarar -> Vadeli Alacaklar listesine eklenir.</p>
                                 </div>
 
                                 <div>
@@ -727,7 +623,7 @@
                 </div>
             </section>
 
-            <!-- ================= 4. MÜSTAHSİL CARİ HESABI ================= -->
+            <!-- 4. MÜSTAHSİL CARİ HESABI -->
             <section id="sec-mustahsil-cari" class="tab-content hidden space-y-4 no-print">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
                     <div class="lg:col-span-5 space-y-4">
@@ -810,20 +706,18 @@
                 </div>
             </section>
 
-            <!-- ================= 5. KÂR / ZARAR, GENEL CARİ & VADELİ ALACAKLAR ================= -->
+            <!-- 5. KÂR / ZARAR, GENEL CARİ & VADELİ ALACAKLAR -->
             <section id="sec-kar-zarar" class="tab-content hidden space-y-5 no-print">
-                
-                <!-- 1. BÖLÜM: TİCARİ KÂR / ZARAR ÖZETİ -->
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h2 class="text-base sm:text-lg font-extrabold text-slate-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-line text-emerald-600"></i> 1. Ticari Kâr / Zarar Durumu
+                        <i class="fa-solid fa-chart-line text-emerald-600"></i> 1. Ticari Kâr / Zarar Durumu (Anlık Güncel)
                     </h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
                             <span class="text-[11px] font-bold text-blue-700 uppercase">Toplam Tüccar Cirosu</span>
                             <div id="summary-tuccar-ciro" class="text-xl sm:text-2xl font-black text-blue-950 mt-1">0 TL</div>
-                            <span class="text-[10px] text-blue-600">Kesilen tüm mektupların toplamı</span>
+                            <span class="text-[10px] text-blue-600">Kesilen aktif mektupların toplamı</span>
                         </div>
                         <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl">
                             <span class="text-[11px] font-bold text-purple-700 uppercase">Toplam Müstahsil Maliyeti</span>
@@ -838,7 +732,6 @@
                     </div>
                 </div>
 
-                <!-- 2. BÖLÜM: TÜCCAR & MÜSTAHSİL GENEL CARİ DURUMU -->
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h2 class="text-base sm:text-lg font-extrabold text-slate-800 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-wallet text-indigo-600"></i> 2. Genel Nakit, Alacak & Borç Durumu
@@ -850,19 +743,16 @@
                             <div id="summary-tuccar-alinan" class="text-lg sm:text-xl font-black text-emerald-700 mt-1">0 TL</div>
                             <span class="text-[10px] text-slate-500">Nakit + Havale + Alınan Çekler</span>
                         </div>
-
                         <div class="bg-sky-50 border border-sky-200 p-4 rounded-xl">
                             <span class="text-[11px] font-bold text-sky-800 uppercase">Toplam Tüccarlardan Alacak</span>
                             <div id="summary-tuccar-kalan-alacak" class="text-lg sm:text-xl font-black text-sky-950 mt-1">0 TL</div>
                             <span class="text-[10px] text-sky-700">Tüm tüccarların açık kalan bakiyesi</span>
                         </div>
-
                         <div class="bg-slate-50 border border-slate-200 p-4 rounded-xl">
                             <span class="text-[11px] font-bold text-slate-600 uppercase">Müstahsillere Ödenen Para</span>
                             <div id="summary-mustahsil-odenen" class="text-lg sm:text-xl font-black text-purple-700 mt-1">0 TL</div>
                             <span class="text-[10px] text-slate-500">Üreticilere verilen peşin/avans</span>
                         </div>
-
                         <div id="summary-mustahsil-borc-box" class="bg-rose-50 border border-rose-200 p-4 rounded-xl">
                             <span id="summary-mustahsil-borc-label" class="text-[11px] font-bold text-rose-800 uppercase">Müstahsillere Kalan Borç</span>
                             <div id="summary-mustahsil-kalan-borc" class="text-lg sm:text-xl font-black text-rose-950 mt-1">0 TL</div>
@@ -871,7 +761,6 @@
                     </div>
                 </div>
 
-                <!-- 3. BÖLÜM: VADELİ ALACAKLAR (ÇEK PORTFÖYÜ) -->
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-amber-300/70">
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b border-slate-100">
                         <div>
@@ -902,10 +791,9 @@
                         </table>
                     </div>
                 </div>
-
             </section>
 
-            <!-- ================= 6. TANIMLAR ================= -->
+            <!-- 6. TANIMLAR -->
             <section id="sec-tanimlar" class="tab-content hidden space-y-5 no-print">
                 <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-sm border-2 border-emerald-500/30">
                     <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-100">
@@ -983,7 +871,7 @@
         </main>
     </div>
 
-    <!-- ================= MODAL 1: ANTETLİ KAĞIT (MEKTUP & SEVK FİŞİ) ================= -->
+    <!-- MODALLAR -->
     <div id="mektup-print-modal" class="fixed inset-0 bg-black/70 hidden z-50 flex items-center justify-center p-2 sm:p-4">
         <div class="bg-slate-100 rounded-2xl max-w-3xl w-full p-4 sm:p-6 max-h-[94vh] overflow-y-auto shadow-2xl">
             <div class="flex justify-between items-center pb-3 border-b border-slate-300 mb-4 no-print">
@@ -991,14 +879,12 @@
                     <span class="bg-amber-600 text-white p-1.5 rounded-lg text-xs"><i class="fa-solid fa-file-lines"></i></span>
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm sm:text-base">Antetli Hal Mektubu / Gönderim Fişi Önizleme</h3>
-                        <p id="modal-mektup-hint" class="text-[11px] text-amber-800 font-semibold hidden">Yazdır veya WhatsApp ile Gönder dediğinizde mektup kesilip sonraki partiye geçilir. Kapat derseniz mevcut partiye devam edersiniz.</p>
+                        <p id="modal-mektup-hint" class="text-[11px] text-amber-800 font-semibold hidden">Yazdır veya WhatsApp ile Gönder dediğinizde mektup kesilip sonraki partiye geçilir.</p>
                     </div>
                 </div>
                 <button onclick="closePrintModal()" class="text-slate-500 hover:text-slate-800 text-2xl font-bold leading-none">&times;</button>
             </div>
-            
             <div id="mektup-modal-content" class="antet-paper rounded-xl"></div>
-
             <div class="mt-5 flex flex-col sm:flex-row gap-3 no-print">
                 <button id="btn-modal-mektup-print" onclick="printAntetliMektup()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-extrabold py-3 rounded-xl text-sm shadow-md transition flex items-center justify-center gap-2">
                     <i class="fa-solid fa-print"></i> A4 Kağıt Olarak Yazdır
@@ -1011,7 +897,6 @@
         </div>
     </div>
 
-    <!-- ================= MODAL 2: KESİLMİŞ MEKTUP DÜZENLEME (FİYAT GÜNCELLEME) ================= -->
     <div id="mektup-edit-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4 no-print">
         <div class="bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-6 max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200">
             <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
@@ -1023,7 +908,6 @@
                 </div>
                 <button onclick="closeMektupEditModal()" class="text-slate-400 hover:text-slate-800 text-2xl font-bold leading-none">&times;</button>
             </div>
-
             <div class="overflow-x-auto">
                 <table class="w-full text-xs sm:text-sm text-left">
                     <thead class="bg-slate-100 text-slate-600 uppercase text-[10px]">
@@ -1038,12 +922,10 @@
                     <tbody id="edit-mektup-tbody" class="divide-y divide-slate-200"></tbody>
                 </table>
             </div>
-
             <div class="mt-4 p-3.5 bg-amber-50 border border-amber-200 rounded-xl flex justify-between items-center">
                 <span class="text-xs font-bold text-amber-900">Güncel Mektup Toplamı:</span>
                 <strong id="edit-mektup-new-total" class="text-lg font-black text-emerald-700">0 TL</strong>
             </div>
-
             <div class="mt-5 flex gap-3">
                 <button onclick="saveEditedMektup()" id="btn-save-edited-mektup" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-xl text-sm shadow transition">
                     <i class="fa-solid fa-floppy-disk mr-1"></i> Değişiklikleri Kaydet
@@ -1053,7 +935,6 @@
         </div>
     </div>
 
-    <!-- ================= MODAL 3: PARTİ KALEMİNİ BAŞKA TÜCCARA AKTARMA ================= -->
     <div id="transfer-alim-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4 no-print">
         <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200">
             <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
@@ -1065,7 +946,6 @@
                 </div>
                 <button onclick="closeTransferAlimModal()" class="text-slate-400 hover:text-slate-800 text-2xl font-bold leading-none">&times;</button>
             </div>
-
             <div class="space-y-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Hedef Tüccar (Aktif Partisine Eklenecek)</label>
@@ -1073,9 +953,7 @@
                         <option value="">Hedef Tüccar Seçiniz...</option>
                     </select>
                 </div>
-                <p class="text-[11px] text-slate-500">Bu mal mevcut partiden çıkartılacak ve seçtiğiniz tüccarın güncel aktif partisine taşınacaktır.</p>
             </div>
-
             <div class="mt-5 flex gap-2.5">
                 <button onclick="confirmTransferAlim()" id="btn-confirm-transfer" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl text-sm transition">
                     Aktarımı Tamamla
@@ -1085,7 +963,6 @@
         </div>
     </div>
 
-    <!-- ================= MODAL 4: CARİ ÖDEME / TAHSİLAT DÜZENLEME ================= -->
     <div id="odeme-edit-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4 no-print">
         <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200">
             <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
@@ -1097,26 +974,21 @@
                 </div>
                 <button onclick="closeOdemeEditModal()" class="text-slate-400 hover:text-slate-800 text-2xl font-bold leading-none">&times;</button>
             </div>
-
             <form onsubmit="saveEditedOdeme(event)" class="space-y-3">
                 <input type="hidden" id="edit-odeme-type">
                 <input type="hidden" id="edit-odeme-id">
-
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Tutar (TL)</label>
                     <input type="number" inputmode="decimal" step="0.01" id="edit-odeme-tutar" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-extrabold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Açıklama / Not</label>
                     <input type="text" id="edit-odeme-aciklama" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-
                 <div id="edit-odeme-vade-box" class="hidden">
                     <label class="block text-xs font-bold text-amber-900 mb-1">Çek Vade Tarihi</label>
                     <input type="date" id="edit-odeme-vade" class="w-full bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-sm font-bold text-slate-900 outline-none">
                 </div>
-
                 <div class="pt-2 flex gap-2.5">
                     <button type="submit" id="btn-save-edited-odeme" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl text-sm shadow transition">
                         <i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet
@@ -1129,11 +1001,11 @@
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         const SUPABASE_URL = 'https://zyknxulieisyavzfcekd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5a254dWxpZWlzeWF2emZjZWtkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwMjEzMDAsImV4cCI6MjExMDU5NzMwMH0.EIN4KPQcCcJBBxdWL4xnErxsSpk77mGzlCuTPeOhMWk';
-        
+        const RETENTION_DAYS = 30; // Veritabanını şişirmemek için silinmiş kayıtların saklanma süresi (gün)
+
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             auth: {
                 storage: window.sessionStorage,
@@ -1165,7 +1037,6 @@
             kesilenMektuplar: []
         };
 
-        // Güvenlik: XSS önleme yardımcısı
         function escapeHtml(str) {
             if (str === null || str === undefined) return '';
             return String(str)
@@ -1176,7 +1047,6 @@
                 .replace(/'/g, '&#39;');
         }
 
-        // Ondalık kayan nokta hatalarını önleyen temiz sayı formatlayıcı (ör: 0.35 * 10 = 3.5, 0.35 * 3 = 1.05)
         function formatDecimal(num, maxDecimals = 2) {
             const val = Number(num) || 0;
             const factor = Math.pow(10, maxDecimals);
@@ -1184,28 +1054,53 @@
             return parseFloat(rounded.toFixed(maxDecimals)).toString();
         }
 
-        // Türkçe karakterleri otomatik İngilizceye çeviren sağlam yardımcı fonksiyon
         function slugifyUsername(text) {
             if (!text) return '';
             return text.trim().toLowerCase()
-                .replace(/ı/g, 'i')
-                .replace(/ş/g, 's')
-                .replace(/ç/g, 'c')
-                .replace(/ğ/g, 'g')
-                .replace(/ö/g, 'o')
-                .replace(/ü/g, 'u')
-                .replace(/İ/g, 'i')
-                .replace(/Ş/g, 's')
-                .replace(/Ç/g, 'c')
-                .replace(/Ğ/g, 'g')
-                .replace(/Ö/g, 'o')
-                .replace(/Ü/g, 'u')
+                .replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g').replace(/ö/g, 'o').replace(/ü/g, 'u')
+                .replace(/İ/g, 'i').replace(/Ş/g, 's').replace(/Ç/g, 'c').replace(/Ğ/g, 'g').replace(/Ö/g, 'o').replace(/Ü/g, 'u')
                 .replace(/[^a-z0-9]/g, '');
+        }
+
+        function isActiveRecord(row) {
+            return !row || row.deleted_at === null || row.deleted_at === undefined;
+        }
+
+        // Veritabanının kabarmaması için RETENTION_DAYS günden eski silinmiş kayıtları temizle
+        async function purgeOldSoftDeletedRecords() {
+            if (!currentUser) return;
+            const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+            const tables = ['alimlar', 'kesilen_mektuplar', 'tuccar_odemeler', 'mustahsil_odemeler', 'urunler', 'mustahsiller', 'tuccarlar', 'kasalar'];
+            await Promise.all(tables.map(async (tbl) => {
+                try {
+                    await db.from(tbl).delete().eq('user_id', currentUser.id).not('deleted_at', 'is', null).lt('deleted_at', cutoff);
+                } catch (_) {}
+            }));
+        }
+
+        // Yumuşak silme (deleted_at kolonuna ISO tarih yazar; kolon yoksa fallback hard delete yapar)
+        async function softDeleteByIds(table, ids) {
+            if (!ids || ids.length === 0) return { error: null };
+            const nowIso = new Date().toISOString();
+            const res = await db.from(table).update({ deleted_at: nowIso }).in('id', ids);
+            if (res.error && String(res.error.message || '').toLowerCase().includes('deleted_at')) {
+                return await db.from(table).delete().in('id', ids);
+            }
+            return res;
+        }
+
+        function refreshAllViews() {
+            updateAutoParti();
+            calculateNetKilo();
+            renderSonFislerList();
+            renderMektupTable();
+            renderTuccarCariDetails();
+            renderMustahsilCariDetails();
+            renderKarZarar();
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadSystemSettings();
-
             const { data: { session } } = await db.auth.getSession();
             if (session && session.user) {
                 await initAuthenticatedUser(session.user);
@@ -1233,8 +1128,7 @@
 
         function openWhatsAppSupport(messageText) {
             const cleanPhone = (systemWhatsAppPhone || '905454220710').replace(/\D/g, '');
-            const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`;
-            window.open(url, '_blank');
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(messageText)}`, '_blank');
         }
 
         function togglePasswordVisibility() {
@@ -1255,8 +1149,7 @@
 
         async function handleLogin(e) {
             e.preventDefault();
-            const rawUsername = document.getElementById('login-username').value;
-            const username = slugifyUsername(rawUsername);
+            const username = slugifyUsername(document.getElementById('login-username').value);
             const password = document.getElementById('login-password').value;
             const errBox = document.getElementById('login-error-box');
             const btn = document.getElementById('btn-login-submit');
@@ -1282,10 +1175,9 @@
 
         async function initAuthenticatedUser(user) {
             const { data: profile, error } = await db.from('profiles').select('*').eq('id', user.id).single();
-
             if (error || !profile) {
                 await db.auth.signOut();
-                alert('Kullanıcı profili bulunamadı. Lütfen yöneticiyle iletişime geçin.');
+                alert('Kullanıcı profili bulunamadı.');
                 return;
             }
 
@@ -1296,7 +1188,7 @@
                     const errBox = document.getElementById('login-error-box');
                     errBox.innerText = !profile.is_active
                         ? 'Hesabınız yönetici tarafından pasif duruma alınmıştır.'
-                        : 'Lisans süreniz dolmuştur. Yenileme için WhatsApp destek hattından iletişime geçin.';
+                        : 'Lisans süreniz dolmuştur.';
                     errBox.classList.remove('hidden');
                     return;
                 }
@@ -1313,12 +1205,10 @@
                 document.getElementById('header-firma-title').className = 'font-extrabold text-base sm:text-lg tracking-wide text-amber-400 leading-tight';
                 document.getElementById('header-firma-title').innerText = 'HAL HESAP YÖNETİM';
                 document.getElementById('header-user-info').innerText = 'Süper Admin Kontrol Merkezi';
-
                 document.getElementById('admin-nav').classList.remove('hidden');
                 document.getElementById('tenant-nav').classList.add('hidden');
                 document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
                 document.getElementById('sec-super-admin').classList.remove('hidden');
-
                 await loadSystemSettings();
                 await loadAdminPanelData();
             } else {
@@ -1326,10 +1216,10 @@
                 document.getElementById('header-firma-title').className = 'font-extrabold text-base sm:text-lg tracking-wide text-emerald-400 leading-tight';
                 const remDays = calculateRemainingDays(profile.bitis_tarihi);
                 document.getElementById('header-user-info').innerText = `Hoş geldin, ${profile.username.toUpperCase()} • Kalan Lisans: ${remDays} Gün`;
-
                 document.getElementById('admin-nav').classList.add('hidden');
                 document.getElementById('tenant-nav').classList.remove('hidden');
                 switchTab('mal-alim');
+                await purgeOldSoftDeletedRecords();
                 await syncAllData();
             }
         }
@@ -1340,8 +1230,7 @@
             today.setHours(0, 0, 0, 0);
             const end = new Date(endDateStr);
             end.setHours(0, 0, 0, 0);
-            const diffTime = end - today;
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return Math.ceil((end - today) / (1000 * 60 * 60 * 24));
         }
 
         async function handleLogout() {
@@ -1355,14 +1244,12 @@
             document.getElementById('login-password').value = '';
         }
 
-        // ================= SÜPER ADMİN FONKSİYONLARI =================
+        // SÜPER ADMİN
         async function loadAdminPanelData() {
             if (!currentProfile || currentProfile.role !== 'admin') return;
-
             const { data: users, error } = await db.from('profiles').select('*').order('created_at', { ascending: false });
             const tbody = document.getElementById('admin-users-tbody');
             tbody.innerHTML = '';
-
             if (error || !users) return;
 
             const tenants = users.filter(u => u.role !== 'admin');
@@ -1411,58 +1298,39 @@
         }
 
         async function handleAdminSendWhatsAppCreds(userId, username, plainPass, savedPhone, firmaAdi) {
-            if (!plainPass) {
-                alert('Bu kullanıcı eski sistemde açıldığı için mevcut şifresi kayıtlı değil. Önce "Şifre Değiştir" butonundan şifresini belirleyin, sonra tek tıkla gönderebilirsiniz.');
-                return;
-            }
+            if (!plainPass) { alert('Önce "Şifre Değiştir" butonundan şifresini belirleyin.'); return; }
             let phone = savedPhone;
             if (!phone) {
-                phone = prompt(`${username} (${firmaAdi}) için WhatsApp telefon numarasını girin (Örn: 0532 123 45 67):`);
+                phone = prompt(`${username} (${firmaAdi}) için WhatsApp telefon numarasını girin:`);
                 if (!phone) return;
                 await db.from('profiles').update({ phone: phone.trim() }).eq('id', userId);
                 await loadAdminPanelData();
             }
-
             const waPhone = formatPhoneForWhatsApp(phone);
             const appUrl = window.location.origin + window.location.pathname;
-            const msg = `Merhaba *${firmaAdi || username}*,\n\n*HAL HESAP* otomasyon sistemi giriş bilgileriniz aşağıdadır:\n\n🔗 *Giriş Adresi:* ${appUrl}\n👤 *Kullanıcı Adı:* ${username}\n🔑 *Şifre:* ${plainPass}\n\nİyi çalışmalar dileriz.`;
-
+            const msg = `Merhaba *${firmaAdi || username}*,\n\n*HAL HESAP* giriş bilgileriniz:\n\n🔗 *Adres:* ${appUrl}\n👤 *Kullanıcı Adı:* ${username}\n🔑 *Şifre:* ${plainPass}`;
             window.open(`https://wa.me/${waPhone}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         async function handleAdminCreateUser(e) {
             e.preventDefault();
-            const rawUsername = document.getElementById('adm-new-username').value;
-            const username = slugifyUsername(rawUsername);
+            const username = slugifyUsername(document.getElementById('adm-new-username').value);
             const password = document.getElementById('adm-new-password').value;
             const firma = document.getElementById('adm-new-firma').value.trim();
             const phone = document.getElementById('adm-new-phone').value.trim();
             const days = parseInt(document.getElementById('adm-new-days').value, 10) || 60;
             const btn = document.getElementById('btn-adm-create');
-
-            if (!username) { alert('Lütfen geçerli bir kullanıcı adı girin.'); return; }
+            if (!username) { alert('Geçerli kullanıcı adı girin.'); return; }
 
             btn.disabled = true;
             btn.innerText = 'Kaydediliyor...';
-
-            const { error } = await db.rpc('admin_create_user', {
-                p_username: username,
-                p_password: password,
-                p_firma_adi: firma,
-                p_days: days,
-                p_phone: phone
-            });
-
+            const { error } = await db.rpc('admin_create_user', { p_username: username, p_password: password, p_firma_adi: firma, p_days: days, p_phone: phone });
             btn.disabled = false;
             btn.innerText = 'Kullanıcıyı ve Süreyi Kaydet';
 
             if (error) { alert('Hata: ' + error.message); return; }
-
-            alert(`Yeni esnaf hesabı oluşturuldu!\n\nKullanıcı Adı: ${username}\nŞifre: ${password}\nSüre: ${days} Gün`);
-            document.getElementById('adm-new-username').value = '';
-            document.getElementById('adm-new-password').value = '';
-            document.getElementById('adm-new-firma').value = '';
-            document.getElementById('adm-new-phone').value = '';
+            alert(`Oluşturuldu!\nKullanıcı Adı: ${username}\nŞifre: ${password}\nSüre: ${days} Gün`);
+            ['adm-new-username', 'adm-new-password', 'adm-new-firma', 'adm-new-phone'].forEach(id => document.getElementById(id).value = '');
             await loadAdminPanelData();
         }
 
@@ -1470,9 +1338,7 @@
             const baseDate = currentBitisStr ? new Date(currentBitisStr) : new Date();
             if (isNaN(baseDate.getTime())) return;
             baseDate.setDate(baseDate.getDate() + deltaDays);
-            const newIso = baseDate.toISOString().split('T')[0];
-
-            const { error } = await db.from('profiles').update({ bitis_tarihi: newIso, is_active: true }).eq('id', userId);
+            const { error } = await db.from('profiles').update({ bitis_tarihi: baseDate.toISOString().split('T')[0], is_active: true }).eq('id', userId);
             if (error) { alert('Hata: ' + error.message); return; }
             await loadAdminPanelData();
         }
@@ -1484,22 +1350,16 @@
         }
 
         async function handleAdminResetPass(userId, username) {
-            const newPass = prompt(`${username} kullanıcısı için yeni şifre belirleyin (En az 6 karakter):`);
-            if (!newPass || newPass.length < 6) {
-                if (newPass) alert('Şifre en az 6 karakter olmalıdır.');
-                return;
-            }
-            const { error } = await db.rpc('admin_reset_password', {
-                p_target_user_id: userId,
-                p_new_password: newPass
-            });
+            const newPass = prompt(`${username} için yeni şifre (en az 6 karakter):`);
+            if (!newPass || newPass.length < 6) { if (newPass) alert('En az 6 karakter olmalı.'); return; }
+            const { error } = await db.rpc('admin_reset_password', { p_target_user_id: userId, p_new_password: newPass });
             if (error) { alert('Hata: ' + error.message); return; }
-            alert(`${username} kullanıcısının şifresi güncellendi! Artık "Şifreyi Gönder" butonuyla WhatsApp'tan atabilirsiniz.`);
+            alert('Şifre güncellendi.');
             await loadAdminPanelData();
         }
 
         async function handleAdminDeleteUser(userId, username) {
-            if (!confirm(`DİKKAT! "${username}" kullanıcısını ve tüm verilerini veritabanından kalıcı olarak silmek istediğinize emin misiniz?`)) return;
+            if (!confirm(`"${username}" kullanıcısını kalıcı silmek istediğinize emin misiniz?`)) return;
             const { error } = await db.rpc('admin_delete_user', { p_target_user_id: userId });
             if (error) { alert('Hata: ' + error.message); return; }
             await loadAdminPanelData();
@@ -1508,25 +1368,24 @@
         async function handleAdminChangeOwnPass(e) {
             e.preventDefault();
             const newPass = document.getElementById('adm-own-new-pass').value;
-            if (!newPass || newPass.length < 6) { alert('Yeni admin şifresi en az 6 karakter olmalıdır.'); return; }
+            if (!newPass || newPass.length < 6) { alert('En az 6 karakter olmalı.'); return; }
             const { error } = await db.rpc('admin_change_own_password', { p_new_password: newPass });
-            if (error) { alert('Şifre güncelleme hatası: ' + error.message); return; }
+            if (error) { alert('Hata: ' + error.message); return; }
             document.getElementById('adm-own-new-pass').value = '';
-            alert('Admin şifreniz başarıyla değiştirildi!');
+            alert('Admin şifresi değiştirildi!');
         }
 
         async function handleSaveWhatsAppPhone(e) {
             e.preventDefault();
             const rawPhone = document.getElementById('adm-whatsapp-phone').value.trim().replace(/\D/g, '');
-            if (rawPhone.length < 10) { alert('Lütfen başına 90 ekleyerek geçerli bir telefon numarası girin (Örn: 905454220710).'); return; }
+            if (rawPhone.length < 10) { alert('Geçerli telefon girin.'); return; }
             const { error } = await db.from('system_settings').upsert([{ id: 1, whatsapp_phone: rawPhone, updated_at: new Date().toISOString() }]);
-            if (error) { alert('Kayıt hatası: ' + error.message); return; }
+            if (error) { alert('Hata: ' + error.message); return; }
             systemWhatsAppPhone = rawPhone;
-            document.getElementById('adm-whatsapp-phone').value = rawPhone;
-            alert('Sistem WhatsApp destek numarası güncellendi!');
+            alert('WhatsApp numarası güncellendi!');
         }
 
-        // ================= VERİ SENKRONİZASYONU =================
+        // VERİ SENKRONİZASYONU (Sadece silinmemiş aktif kayıtlar alınır)
         async function syncAllData() {
             if (!currentUser) return;
             try {
@@ -1543,22 +1402,19 @@
                 ]);
 
                 if (fRes.data) state.firma = fRes.data;
-                state.urunler = uRes.data || [];
-                state.mustahsiller = mRes.data || [];
-                state.tuccarlar = tRes.data || [];
-                state.kasalar = kRes.data || [];
-                state.alimlar = aRes.data || [];
-                state.tuccarOdemeler = toRes.data || [];
-                state.mustahsilOdemeler = moRes.data || [];
-                state.kesilenMektuplar = kmRes.data || [];
+                state.urunler = (uRes.data || []).filter(isActiveRecord);
+                state.mustahsiller = (mRes.data || []).filter(isActiveRecord);
+                state.tuccarlar = (tRes.data || []).filter(isActiveRecord);
+                state.kasalar = (kRes.data || []).filter(isActiveRecord);
+                state.alimlar = (aRes.data || []).filter(isActiveRecord);
+                state.tuccarOdemeler = (toRes.data || []).filter(isActiveRecord);
+                state.mustahsilOdemeler = (moRes.data || []).filter(isActiveRecord);
+                state.kesilenMektuplar = (kmRes.data || []).filter(isActiveRecord);
 
                 applyFirmaBilgileriUI();
                 populateSelects();
                 renderTanimListeleri();
-                updateAutoParti();
-                calculateNetKilo();
-                renderSonFislerList();
-                renderKarZarar();
+                refreshAllViews();
             } catch (err) {
                 console.error('Veri çekme hatası:', err);
             }
@@ -1569,7 +1425,6 @@
             document.getElementById('firma-altbaslik-input').value = state.firma.alt_baslik || '';
             document.getElementById('firma-telefon-input').value = state.firma.telefon || '';
             document.getElementById('firma-adres-input').value = state.firma.adres || '';
-
             document.getElementById('header-firma-title').innerText = state.firma.firma_adi || 'HAL HESAP';
             document.getElementById('rec-firma-adi').innerText = state.firma.firma_adi || 'HAL HESAP';
             document.getElementById('rec-firma-adres').innerText = state.firma.adres || '';
@@ -1579,20 +1434,18 @@
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
             const uid = session?.user?.id || currentUser.id;
-
-            const firma_adi = document.getElementById('firma-adi-input').value.trim();
-            const alt_baslik = document.getElementById('firma-altbaslik-input').value.trim();
-            const telefon = document.getElementById('firma-telefon-input').value.trim();
-            const adres = document.getElementById('firma-adres-input').value.trim();
-
-            const payload = { user_id: uid, firma_adi, alt_baslik, telefon, adres };
+            const payload = {
+                user_id: uid,
+                firma_adi: document.getElementById('firma-adi-input').value.trim(),
+                alt_baslik: document.getElementById('firma-altbaslik-input').value.trim(),
+                telefon: document.getElementById('firma-telefon-input').value.trim(),
+                adres: document.getElementById('firma-adres-input').value.trim()
+            };
             const { error } = await db.from('firma_bilgileri').upsert([payload], { onConflict: 'user_id' });
-
             if (error) { alert('Kayıt hatası: ' + error.message); return; }
-
             state.firma = payload;
             applyFirmaBilgileriUI();
-            alert('Firma ve antet bilgileriniz başarıyla kaydedildi!');
+            alert('Firma bilgileri kaydedildi!');
         }
 
         function switchTab(tabId) {
@@ -1609,60 +1462,76 @@
                 activeBtn.classList.remove('text-slate-300', 'bg-slate-800');
             }
 
-            if(tabId === 'mal-alim') renderSonFislerList();
-            if(tabId === 'mektup-parti') renderMektupTable();
-            if(tabId === 'tuccar-cari') renderTuccarCariDetails();
-            if(tabId === 'mustahsil-cari') renderMustahsilCariDetails();
-            if(tabId === 'kar-zarar') renderKarZarar();
+            if (tabId === 'mal-alim') renderSonFislerList();
+            if (tabId === 'mektup-parti') renderMektupTable();
+            if (tabId === 'tuccar-cari') renderTuccarCariDetails();
+            if (tabId === 'mustahsil-cari') renderMustahsilCariDetails();
+            if (tabId === 'kar-zarar') renderKarZarar();
         }
 
         function populateSelects(forceSelectedMustahsil = null) {
-            const tuccarSelects = ['alim-tuccar', 'mektup-tuccar-select', 'cari-tuccar-select'];
-            tuccarSelects.forEach(id => {
+            ['alim-tuccar', 'mektup-tuccar-select', 'cari-tuccar-select'].forEach(id => {
                 const el = document.getElementById(id);
-                if(!el) return;
+                if (!el) return;
                 const val = el.value;
                 el.innerHTML = '<option value="">' + (id.includes('select') ? 'Tüccar Seçin...' : 'Tüccar Seçiniz...') + '</option>';
                 state.tuccarlar.forEach(t => el.innerHTML += `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)}</option>`);
-                el.value = val;
+                el.value = state.tuccarlar.some(t => t.name === val) ? val : '';
             });
 
-            const mustahsilSelects = ['alim-mustahsil', 'cari-mustahsil-select'];
-            mustahsilSelects.forEach(id => {
+            ['alim-mustahsil', 'cari-mustahsil-select'].forEach(id => {
                 const el = document.getElementById(id);
-                if(!el) return;
+                if (!el) return;
                 const val = (id === 'alim-mustahsil' && forceSelectedMustahsil) ? forceSelectedMustahsil : el.value;
                 el.innerHTML = '<option value="">Müstahsil Seçiniz...</option>';
                 state.mustahsiller.forEach(m => el.innerHTML += `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`);
-                el.value = val;
+                el.value = state.mustahsiller.some(m => m.name === val) ? val : '';
             });
 
             const urunSelect = document.getElementById('alim-urun');
-            if(urunSelect) {
+            if (urunSelect) {
                 const val = urunSelect.value;
                 urunSelect.innerHTML = '<option value="">Ürün Seçiniz...</option>';
                 state.urunler.forEach(u => urunSelect.innerHTML += `<option value="${escapeHtml(u.name)}">${escapeHtml(u.name)}</option>`);
-                urunSelect.value = val || (state.urunler[0]?.name || '');
+                urunSelect.value = state.urunler.some(u => u.name === val) ? val : (state.urunler[0]?.name || '');
             }
 
             const kasaSelect = document.getElementById('alim-kasa');
-            if(kasaSelect) {
+            if (kasaSelect) {
                 const val = kasaSelect.value;
                 kasaSelect.innerHTML = '<option value="">Kasa Seç...</option>';
                 state.kasalar.forEach(k => kasaSelect.innerHTML += `<option value="${k.id}">${escapeHtml(k.name)} (${formatDecimal(k.dara)} Kg)</option>`);
-                kasaSelect.value = val || (state.kasalar[0]?.id || '');
+                kasaSelect.value = state.kasalar.some(k => String(k.id) === String(val)) ? val : (state.kasalar[0]?.id || '');
             }
         }
 
         function getAktifPartiNo(tuccarName) {
             const found = state.tuccarlar.find(t => t.name === tuccarName);
-            return found ? (found.aktif_parti || 1) : 1;
+            return found ? Math.max(1, parseInt(found.aktif_parti, 10) || 1) : 1;
+        }
+
+        // Kalan kesilmiş partilere / alımlara göre en sonki doğru parti numarasını hesaplar
+        function computeRestoredPartiNo(tuccarName, uid) {
+            let maxParti = 0;
+            state.kesilenMektuplar.forEach(m => {
+                if (m.tuccar === tuccarName && (!uid || !m.user_id || m.user_id === uid)) {
+                    const match = String(m.parti || '').match(/(\d+)/);
+                    if (match) maxParti = Math.max(maxParti, parseInt(match[1], 10) || 0);
+                }
+            });
+            state.alimlar.forEach(a => {
+                if (a.tuccar === tuccarName && a.mektup_kesildi) {
+                    const match = String(a.parti || '').match(/(\d+)/);
+                    if (match) maxParti = Math.max(maxParti, parseInt(match[1], 10) || 0);
+                }
+            });
+            return maxParti > 0 ? maxParti + 1 : 1;
         }
 
         function updateAutoParti() {
             const tuccar = document.getElementById('alim-tuccar').value;
             const display = document.getElementById('alim-parti-display');
-            if(!tuccar) { display.value = "Önce Tüccar Seçin"; return; }
+            if (!tuccar) { display.value = "Önce Tüccar Seçin"; return; }
             display.value = `${getAktifPartiNo(tuccar)}. Parti (Aktif)`;
         }
 
@@ -1673,7 +1542,7 @@
 
             let singleDara = 0;
             const kasaObj = state.kasalar.find(k => String(k.id) === String(kasaId));
-            if(kasaObj) singleDara = parseFloat(kasaObj.dara) || 0;
+            if (kasaObj) singleDara = parseFloat(kasaObj.dara) || 0;
 
             const totalDara = Math.round((singleDara * adet) * 100) / 100;
             const net = Math.max(0, Math.round((brut - totalDara) * 100) / 100);
@@ -1694,7 +1563,6 @@
             document.getElementById('rec-net-total').innerText = formatDecimal(net) + ' Kg';
         }
 
-        // Fiş Önizleme Altından Hızlı Müstahsil Ekleme
         async function handleQuickAddMustahsil(e) {
             e.preventDefault();
             const nameInput = document.getElementById('quick-mustahsil-name');
@@ -1712,7 +1580,6 @@
                 calculateNetKilo();
                 nameInput.value = '';
                 phoneInput.value = '';
-                alert(`"${existing.name}" zaten kayıtlı, fiş formunda seçildi.`);
                 return;
             }
 
@@ -1722,14 +1589,11 @@
             btn.disabled = true;
             const origHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ekleniyor...';
-
             const { data, error } = await db.from('mustahsiller').insert([{ user_id: uid, name, phone }]).select();
-
             btn.disabled = false;
             btn.innerHTML = origHtml;
 
             if (error) { alert('Hata: ' + error.message); return; }
-
             if (data && data[0]) {
                 state.mustahsiller.push(data[0]);
                 populateSelects(data[0].name);
@@ -1741,7 +1605,6 @@
             }
         }
 
-        // Çift Kayıt Engelleme Yardımcıları
         function markAlimFormDirty() {
             if (currentSavedAlimRecord) {
                 currentSavedAlimRecord = null;
@@ -1759,13 +1622,11 @@
         }
 
         async function saveAlimRecord() {
-            if (currentSavedAlimRecord) {
-                return currentSavedAlimRecord;
-            }
+            if (currentSavedAlimRecord) return currentSavedAlimRecord;
             if (isSavingAlim) return null;
 
             const { data: { session } } = await db.auth.getSession();
-            if (!session || !session.user) { alert('Oturum süreniz dolmuş, lütfen tekrar giriş yapın.'); return null; }
+            if (!session || !session.user) { alert('Oturum süreniz dolmuş.'); return null; }
 
             const tuccar = document.getElementById('alim-tuccar').value;
             const mustahsil = document.getElementById('alim-mustahsil').value;
@@ -1776,15 +1637,13 @@
             const totalDara = parseFloat(document.getElementById('alim-toplam-dara').value);
             const net = parseFloat(document.getElementById('alim-net-kilo').value);
 
-            if(!tuccar || !mustahsil || !urun) { alert('Lütfen tüm seçimleri yapınız!'); return null; }
-            if(isNaN(brut) || brut <= 0) { alert('Lütfen geçerli bir brüt kilo giriniz!'); return null; }
+            if (!tuccar || !mustahsil || !urun) { alert('Lütfen tüm seçimleri yapınız!'); return null; }
+            if (isNaN(brut) || brut <= 0) { alert('Geçerli brüt kilo giriniz!'); return null; }
 
             isSavingAlim = true;
             try {
-                const currentPartiNo = getAktifPartiNo(tuccar);
-                const partiStr = `${currentPartiNo}. Parti`;
+                const partiStr = `${getAktifPartiNo(tuccar)}. Parti`;
                 const kasaObj = state.kasalar.find(k => String(k.id) === String(kasaId));
-
                 const newAlim = {
                     user_id: session.user.id,
                     tarih: new Date().toLocaleString('tr-TR'),
@@ -1796,16 +1655,15 @@
                 };
 
                 const { data, error } = await db.from('alimlar').insert([newAlim]).select();
-                if(error) { alert('Kayıt hatası: ' + error.message); return null; }
+                if (error) { alert('Kayıt hatası: ' + error.message); return null; }
 
-                if(data && data[0]) {
+                if (data && data[0]) {
                     currentSavedAlimRecord = data[0];
                     state.alimlar.unshift(data[0]);
                     document.getElementById('rec-no').innerText = data[0].id;
                     document.getElementById('rec-tarih').innerText = data[0].tarih;
                     document.getElementById('alim-saved-id').innerText = data[0].id;
                     document.getElementById('alim-saved-banner').classList.remove('hidden');
-
                     renderSonFislerList();
                     renderKarZarar();
                     return data[0];
@@ -1820,14 +1678,10 @@
             e.preventDefault();
             const btn = document.getElementById('btn-alim-kaydet');
             const btnWa = document.getElementById('btn-alim-whatsapp');
-            btn.disabled = true;
-            btnWa.disabled = true;
+            btn.disabled = true; btnWa.disabled = true;
             const saved = await saveAlimRecord();
-            btn.disabled = false;
-            btnWa.disabled = false;
-
+            btn.disabled = false; btnWa.disabled = false;
             if (!saved) return;
-
             document.body.classList.remove('print-mode-letter');
             document.body.classList.add('print-mode-receipt');
             window.print();
@@ -1836,12 +1690,9 @@
         async function handleAlimKaydetVeWhatsApp() {
             const btn = document.getElementById('btn-alim-kaydet');
             const btnWa = document.getElementById('btn-alim-whatsapp');
-            btn.disabled = true;
-            btnWa.disabled = true;
+            btn.disabled = true; btnWa.disabled = true;
             const saved = await saveAlimRecord();
-            btn.disabled = false;
-            btnWa.disabled = false;
-
+            btn.disabled = false; btnWa.disabled = false;
             if (!saved) return;
             await sendFisWhatsAppById(saved.id);
         }
@@ -1849,12 +1700,10 @@
         async function sendFisWhatsAppById(alimId) {
             const alim = state.alimlar.find(a => a.id === alimId);
             if (!alim) return;
-
             const mObj = state.mustahsiller.find(m => m.name === alim.mustahsil);
             let phone = mObj?.phone || '';
-
             if (!phone) {
-                phone = prompt(`"${alim.mustahsil}" için kayıtlı telefon numarası yok. WhatsApp numarasını girin (Örn: 0532 123 45 67):`);
+                phone = prompt(`"${alim.mustahsil}" için WhatsApp numarası girin:`);
                 if (!phone) return;
                 if (mObj) {
                     await db.from('mustahsiller').update({ phone: phone.trim() }).eq('id', mObj.id);
@@ -1862,25 +1711,10 @@
                     renderTanimListeleri();
                 }
             }
-
             const waPhone = formatPhoneForWhatsApp(phone);
             const firmaAdi = state.firma.firma_adi || 'HAL HESAP';
             const firmaTel = state.firma.telefon ? `\n📞 ${state.firma.telefon}` : '';
-
-            const msg =
-`*${firmaAdi}* - MAL ALIM FİŞİ${firmaTel}
-━━━━━━━━━━━━━━━━━━━━
-🧾 *Fiş No:* #${alim.id}
-📅 *Tarih:* ${alim.tarih}
-👨‍🌾 *Müstahsil:* ${alim.mustahsil}
-🚛 *Sevk:* ${alim.tuccar} (${alim.parti})
-━━━━━━━━━━━━━━━━━━━━
-🍅 *Ürün:* ${alim.urun}
-📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Dara)
-⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg
-✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*
-━━━━━━━━━━━━━━━━━━━━
-_Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
+            const msg = `*${firmaAdi}* - MAL ALIM FİŞİ${firmaTel}\n━━━━━━━━━━━━━━━━━━━━\n🧾 *Fiş No:* #${alim.id}\n📅 *Tarih:* ${alim.tarih}\n👨‍🌾 *Müstahsil:* ${alim.mustahsil}\n🚛 *Sevk:* ${alim.tuccar} (${alim.parti})\n━━━━━━━━━━━━━━━━━━━━\n🍅 *Ürün:* ${alim.urun}\n📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Dara)\n⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg\n✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*\n━━━━━━━━━━━━━━━━━━━━\n_Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
 
             const gonderimTarihi = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
             await db.from('alimlar').update({ whatsapp_gonderildi: true, whatsapp_tarih: gonderimTarihi }).eq('id', alim.id);
@@ -1896,17 +1730,14 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             const container = document.getElementById('son-fisler-list');
             if (!container) return;
             const recent = state.alimlar.slice(0, 10);
-
             if (recent.length === 0) {
                 container.innerHTML = '<p class="text-xs text-slate-400 text-center py-3">Henüz mal alım fişi kesilmedi.</p>';
                 return;
             }
-
             container.innerHTML = recent.map(a => {
                 const waBadge = a.whatsapp_gonderildi
                     ? `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp"></i> WhatsApp ile Gönderildi ${a.whatsapp_tarih ? '(' + escapeHtml(a.whatsapp_tarih) + ')' : ''}</span>`
                     : `<span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded-full">WhatsApp Gönderilmedi</span>`;
-
                 return `
                     <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
                         <div>
@@ -1922,14 +1753,14 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             }).join('');
         }
 
-        // ================= PARTİ & MEKTUP KESME (MAL ÇIKARMA / AKTARMA + ÖNİZLEME AKIŞI) =================
+        // PARTİ & MEKTUP
         function renderMektupTable() {
             const selectedTuccar = document.getElementById('mektup-tuccar-select').value;
             const partiDisplay = document.getElementById('mektup-parti-display');
             const tbody = document.getElementById('mektup-table-body');
             tbody.innerHTML = '';
 
-            if(!selectedTuccar) {
+            if (!selectedTuccar) {
                 partiDisplay.value = 'Aktif Parti';
                 tbody.innerHTML = '<tr><td colspan="7" class="text-center p-4 text-slate-400">Lütfen yukarıdan bir Tüccar seçiniz.</td></tr>';
                 document.getElementById('mektup-sum-kilo').innerText = '0 Kg';
@@ -1944,7 +1775,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             const filtered = state.alimlar.filter(a => a.tuccar === selectedTuccar && a.parti === partiStr && !a.mektup_kesildi);
             let sumKilo = 0, sumTuccar = 0;
 
-            if(filtered.length === 0) {
+            if (filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-slate-400">${partiStr} için henüz mal girişi yok.</td></tr>`;
             }
 
@@ -1969,7 +1800,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                             <button type="button" onclick="openTransferAlimModal(${item.id})" title="Başka Tüccara Aktar" class="bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold px-2 py-1 rounded-lg text-[11px] transition">
                                 <i class="fa-solid fa-truck-arrow-right"></i> Aktar
                             </button>
-                            <button type="button" onclick="removeAlimFromParti(${item.id})" title="Partiden Çıkart / İptal Et" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px] transition">
+                            <button type="button" onclick="removeAlimFromParti(${item.id})" title="Partiden Çıkart" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px] transition">
                                 <i class="fa-solid fa-xmark"></i> Çıkar
                             </button>
                         </td>
@@ -1981,13 +1812,12 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             document.getElementById('mektup-sum-tuccar').innerText = sumTuccar.toLocaleString('tr-TR') + ' TL';
         }
 
-        // Partiden mal çıkartma (iptal etme)
         async function removeAlimFromParti(alimId) {
             const item = state.alimlar.find(a => a.id === alimId);
             if (!item) return;
-            if (!confirm(`"${item.mustahsil} - ${item.urun} (${formatDecimal(item.net)} Kg)" kalemini bu partiden çıkartmak (kaydı silmek) istediğinize emin misiniz?`)) return;
+            if (!confirm(`"${item.mustahsil} - ${item.urun} (${formatDecimal(item.net)} Kg)" kalemini partiden çıkartmak istediğinize emin misiniz?`)) return;
 
-            const { error } = await db.from('alimlar').delete().eq('id', alimId);
+            const { error } = await softDeleteByIds('alimlar', [alimId]);
             if (error) { alert('Çıkartma hatası: ' + error.message); return; }
 
             state.alimlar = state.alimlar.filter(a => a.id !== alimId);
@@ -1995,27 +1825,21 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                 currentSavedAlimRecord = null;
                 document.getElementById('alim-saved-banner').classList.add('hidden');
             }
-            renderMektupTable();
-            renderSonFislerList();
-            renderKarZarar();
+            refreshAllViews();
         }
 
-        // Başka tüccara aktarma modalı
         function openTransferAlimModal(alimId) {
             const item = state.alimlar.find(a => a.id === alimId);
             if (!item) return;
             transferringAlimId = alimId;
-
             document.getElementById('transfer-alim-info').innerText = `${item.mustahsil} • ${item.urun} (${formatDecimal(item.net)} Kg) — Şu an: ${item.tuccar}`;
             const sel = document.getElementById('transfer-target-tuccar');
             sel.innerHTML = '<option value="">Hedef Tüccar Seçiniz...</option>';
             state.tuccarlar.forEach(t => {
                 if (t.name !== item.tuccar) {
-                    const pNo = t.aktif_parti || 1;
-                    sel.innerHTML += `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${pNo}. Parti)</option>`;
+                    sel.innerHTML += `<option value="${escapeHtml(t.name)}">${escapeHtml(t.name)} (${getAktifPartiNo(t.name)}. Parti)</option>`;
                 }
             });
-
             document.getElementById('transfer-alim-modal').classList.remove('hidden');
         }
 
@@ -2027,54 +1851,36 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
         async function confirmTransferAlim() {
             if (!transferringAlimId) return;
             const targetTuccar = document.getElementById('transfer-target-tuccar').value;
-            if (!targetTuccar) { alert('Lütfen hedef tüccarı seçiniz.'); return; }
-
-            const targetPartiNo = getAktifPartiNo(targetTuccar);
-            const targetPartiStr = `${targetPartiNo}. Parti`;
+            if (!targetTuccar) { alert('Hedef tüccarı seçiniz.'); return; }
+            const targetPartiStr = `${getAktifPartiNo(targetTuccar)}. Parti`;
 
             const btn = document.getElementById('btn-confirm-transfer');
-            btn.disabled = true;
-            btn.innerText = 'Aktarılıyor...';
-
-            const { error } = await db.from('alimlar')
-                .update({ tuccar: targetTuccar, parti: targetPartiStr })
-                .eq('id', transferringAlimId);
-
-            btn.disabled = false;
-            btn.innerText = 'Aktarımı Tamamla';
+            btn.disabled = true; btn.innerText = 'Aktarılıyor...';
+            const { error } = await db.from('alimlar').update({ tuccar: targetTuccar, parti: targetPartiStr }).eq('id', transferringAlimId);
+            btn.disabled = false; btn.innerText = 'Aktarımı Tamamla';
 
             if (error) { alert('Aktarma hatası: ' + error.message); return; }
-
             const item = state.alimlar.find(a => a.id === transferringAlimId);
-            if (item) {
-                item.tuccar = targetTuccar;
-                item.parti = targetPartiStr;
-            }
-
+            if (item) { item.tuccar = targetTuccar; item.parti = targetPartiStr; }
             closeTransferAlimModal();
-            renderMektupTable();
-            renderSonFislerList();
-            alert(`Mal başarıyla "${targetTuccar} (${targetPartiStr})" partisine aktarıldı!`);
+            refreshAllViews();
         }
 
         async function updateRowPrice(id, key, val) {
             const numVal = parseFloat(val) || 0;
             const { error } = await db.from('alimlar').update({ [key]: numVal }).eq('id', id);
-            if(error) { alert('Fiyat güncellenemedi: ' + error.message); return; }
+            if (error) { alert('Fiyat güncellenemedi: ' + error.message); return; }
             const item = state.alimlar.find(a => a.id === id);
-            if(item) { item[key] = numVal; renderMektupTable(); renderKarZarar(); }
+            if (item) { item[key] = numVal; renderMektupTable(); renderKarZarar(); }
         }
 
-        // ADIM 1: Önce sadece önizleme aç
         function openMektupPreviewBeforeFinalize() {
             const selectedTuccar = document.getElementById('mektup-tuccar-select').value;
-            if(!selectedTuccar) { alert('Lütfen Tüccar seçiniz!'); return; }
-
+            if (!selectedTuccar) { alert('Lütfen Tüccar seçiniz!'); return; }
             const currentPartiNo = getAktifPartiNo(selectedTuccar);
             const partiStr = `${currentPartiNo}. Parti`;
             const items = state.alimlar.filter(a => a.tuccar === selectedTuccar && a.parti === partiStr && !a.mektup_kesildi);
-
-            if(items.length === 0) { alert('Bu partide kesilecek mal alımı bulunamadı!'); return; }
+            if (items.length === 0) { alert('Bu partide kesilecek mal alımı bulunamadı!'); return; }
 
             let toplamKilo = 0, toplamTutar = 0;
             items.forEach(a => {
@@ -2083,41 +1889,23 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             });
 
             const tarihStr = new Date().toLocaleString('tr-TR');
-            pendingDraftMektup = {
-                tuccar: selectedTuccar,
-                partiNo: currentPartiNo,
-                partiStr: partiStr,
-                items: items,
-                toplamKilo: toplamKilo,
-                toplamTutar: toplamTutar,
-                tarihStr: tarihStr
-            };
-
+            pendingDraftMektup = { tuccar: selectedTuccar, partiNo: currentPartiNo, partiStr, items, toplamKilo, toplamTutar, tarihStr };
             openMektupPrintModal(selectedTuccar, partiStr, items, toplamKilo, toplamTutar, tarihStr, null, true);
         }
 
-        // ADIM 2: Kullanıcı Önizlemede "A4 Yazdır" veya "WhatsApp ile Gönder" derse kesinleştir ve sonraki partiye geç
         async function finalizePendingMektupIfNeeded() {
             if (!pendingDraftMektup) return activeModalMektupId;
-
             const { data: { session } } = await db.auth.getSession();
             const uid = session?.user?.id || currentUser.id;
             const draft = pendingDraftMektup;
 
             const { data: mektupData, error: mErr } = await db.from('kesilen_mektuplar').insert([{
-                user_id: uid,
-                tarih: draft.tarihStr,
-                tuccar: draft.tuccar,
-                parti: draft.partiStr,
-                items: draft.items,
-                toplam_kilo: draft.toplamKilo,
-                toplam_tutar: draft.toplamTutar,
-                whatsapp_gonderildi: false
+                user_id: uid, tarih: draft.tarihStr, tuccar: draft.tuccar, parti: draft.partiStr,
+                items: draft.items, toplam_kilo: draft.toplamKilo, toplam_tutar: draft.toplamTutar, whatsapp_gonderildi: false
             }]).select();
+            if (mErr) { alert('Mektup kayıt hatası: ' + mErr.message); return null; }
 
-            if(mErr) { alert('Mektup kayıt hatası: ' + mErr.message); return null; }
             const newMektup = mektupData[0];
-
             const itemIds = draft.items.map(i => i.id);
             await db.from('alimlar').update({ mektup_kesildi: true, mektup_id: newMektup.id }).in('id', itemIds);
 
@@ -2127,22 +1915,18 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             draft.items.forEach(a => { a.mektup_kesildi = true; a.mektup_id = newMektup.id; });
             state.kesilenMektuplar.unshift(newMektup);
             const tObj = state.tuccarlar.find(t => t.name === draft.tuccar);
-            if(tObj) tObj.aktif_parti = nextParti;
+            if (tObj) tObj.aktif_parti = nextParti;
 
             pendingDraftMektup = null;
             activeModalMektupId = newMektup.id;
             document.getElementById('modal-mektup-hint').classList.add('hidden');
-
-            updateAutoParti();
-            renderMektupTable();
-            renderKarZarar();
+            refreshAllViews();
             return newMektup.id;
         }
 
         function openMektupPrintModal(tuccar, parti, items, toplamKilo, toplamTutar, tarih, mektupId, isDraft = false) {
             activeModalMektupId = mektupId;
             if (!isDraft) pendingDraftMektup = null;
-
             const hintEl = document.getElementById('modal-mektup-hint');
             if (hintEl) hintEl.classList.toggle('hidden', !isDraft);
 
@@ -2151,7 +1935,6 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             const altBaslik = state.firma.alt_baslik || 'Yaş Sebze & Meyve Komisyonculuğu';
             const telefon = state.firma.telefon ? `Tel: ${state.firma.telefon}` : '';
             const adres = state.firma.adres || '';
-
             const mObj = mektupId ? state.kesilenMektuplar.find(x => x.id === mektupId) : null;
             const waNoteHtml = mObj && mObj.whatsapp_gonderildi
                 ? `<div class="mt-1 inline-block bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2 py-0.5 rounded">✓ WhatsApp ile Gönderildi (${escapeHtml(mObj.whatsapp_tarih || '')})</div>`
@@ -2244,20 +2027,16 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             btnWa.disabled = true;
             const finalId = await finalizePendingMektupIfNeeded();
             btnWa.disabled = false;
-            if (finalId) {
-                await sendMektupWhatsAppById(finalId);
-            }
+            if (finalId) await sendMektupWhatsAppById(finalId);
         }
 
         async function sendMektupWhatsAppById(mektupId) {
             const m = state.kesilenMektuplar.find(x => x.id === mektupId);
             if (!m) return;
-
             const tObj = state.tuccarlar.find(t => t.name === m.tuccar);
             let phone = tObj?.phone || '';
-
             if (!phone) {
-                phone = prompt(`"${m.tuccar}" için kayıtlı WhatsApp numarası yok. Telefon numarasını girin (Örn: 0532 123 45 67):`);
+                phone = prompt(`"${m.tuccar}" için WhatsApp numarası girin:`);
                 if (!phone) return;
                 if (tObj) {
                     await db.from('tuccarlar').update({ phone: phone.trim() }).eq('id', tObj.id);
@@ -2265,13 +2044,10 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                     renderTanimListeleri();
                 }
             }
-
             const waPhone = formatPhoneForWhatsApp(phone);
             const firmaAdi = state.firma.firma_adi || 'HAL HESAP';
             const firmaTel = state.firma.telefon ? `\n📞 ${state.firma.telefon}` : '';
-
-            let kalemlerText = '';
-            let toplamKasa = 0;
+            let kalemlerText = '', toplamKasa = 0;
             (m.items || []).forEach((it, idx) => {
                 const net = parseFloat(it.net) || 0;
                 const fiyat = parseFloat(it.tuccar_fiyat) || 0;
@@ -2279,28 +2055,12 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                 toplamKasa += kasa;
                 kalemlerText += `${idx + 1}. *${it.urun}* (${it.mustahsil}) - ${kasa > 0 ? kasa + ' Kasa | ' : ''}${net.toLocaleString('tr-TR')} Kg x ${fiyat.toLocaleString('tr-TR')} ₺ = *${(net * fiyat).toLocaleString('tr-TR')} ₺*\n`;
             });
-
-            const msg =
-`*${firmaAdi}* - SEVK & HAL MEKTUBU${firmaTel}
-━━━━━━━━━━━━━━━━━━━━
-📄 *Evrak No:* #${m.id}
-📅 *Tarih:* ${m.tarih}
-🏢 *Alıcı Tüccar:* SAYIN ${m.tuccar}
-🚛 *Sevk / Parti:* ${m.parti}
-━━━━━━━━━━━━━━━━━━━━
-*MAL DÖKÜMÜ:*
-${kalemlerText}━━━━━━━━━━━━━━━━━━━━
-📦 *Toplam Kasa:* ${toplamKasa} Adet
-⚖️ *Toplam Net Kilo:* *${parseFloat(m.toplam_kilo).toLocaleString('tr-TR')} Kg*
-💰 *GENEL TOPLAM:* *${parseFloat(m.toplam_tutar).toLocaleString('tr-TR')} ₺*
-━━━━━━━━━━━━━━━━━━━━
-_Hayırlı işler dileriz._`;
+            const msg = `*${firmaAdi}* - SEVK & HAL MEKTUBU${firmaTel}\n━━━━━━━━━━━━━━━━━━━━\n📄 *Evrak No:* #${m.id}\n📅 *Tarih:* ${m.tarih}\n🏢 *Alıcı Tüccar:* SAYIN ${m.tuccar}\n🚛 *Sevk / Parti:* ${m.parti}\n━━━━━━━━━━━━━━━━━━━━\n*MAL DÖKÜMÜ:*\n${kalemlerText}━━━━━━━━━━━━━━━━━━━━\n📦 *Toplam Kasa:* ${toplamKasa} Adet\n⚖️ *Toplam Net Kilo:* *${parseFloat(m.toplam_kilo).toLocaleString('tr-TR')} Kg*\n💰 *GENEL TOPLAM:* *${parseFloat(m.toplam_tutar).toLocaleString('tr-TR')} ₺*\n━━━━━━━━━━━━━━━━━━━━\n_Hayırlı işler dileriz._`;
 
             const gonderimTarihi = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
             await db.from('kesilen_mektuplar').update({ whatsapp_gonderildi: true, whatsapp_tarih: gonderimTarihi }).eq('id', m.id);
             m.whatsapp_gonderildi = true;
             m.whatsapp_tarih = gonderimTarihi;
-
             renderTuccarCariDetails();
             if (!document.getElementById('mektup-print-modal').classList.contains('hidden')) {
                 openMektupPrintModal(m.tuccar, m.parti, m.items, m.toplam_kilo, m.toplam_tutar, m.tarih, m.id, false);
@@ -2313,14 +2073,10 @@ _Hayırlı işler dileriz._`;
             btnPrint.disabled = true;
             const finalId = await finalizePendingMektupIfNeeded();
             btnPrint.disabled = false;
-
             if (finalId) {
                 const m = state.kesilenMektuplar.find(x => x.id === finalId);
-                if (m) {
-                    openMektupPrintModal(m.tuccar, m.parti, m.items, m.toplam_kilo, m.toplam_tutar, m.tarih, m.id, false);
-                }
+                if (m) openMektupPrintModal(m.tuccar, m.parti, m.items, m.toplam_kilo, m.toplam_tutar, m.tarih, m.id, false);
             }
-
             document.body.classList.remove('print-mode-receipt');
             document.body.classList.add('print-mode-letter');
             window.print();
@@ -2328,7 +2084,7 @@ _Hayırlı işler dileriz._`;
 
         function openArsivMektupById(id) {
             const m = state.kesilenMektuplar.find(x => x.id === id);
-            if(m) openMektupPrintModal(m.tuccar, m.parti, m.items, m.toplam_kilo, m.toplam_tutar, m.tarih, m.id, false);
+            if (m) openMektupPrintModal(m.tuccar, m.parti, m.items, m.toplam_kilo, m.toplam_tutar, m.tarih, m.id, false);
         }
 
         function closePrintModal() {
@@ -2340,12 +2096,11 @@ _Hayırlı işler dileriz._`;
             document.body.classList.add('print-mode-receipt');
         }
 
-        // ================= KESİLMİŞ MEKTUP DÜZENLEME =================
+        // KESİLMİŞ MEKTUP DÜZENLEME
         function openEditMektupModalById(id) {
             const m = state.kesilenMektuplar.find(x => x.id === id);
             if (!m) return;
             editingMektupObj = JSON.parse(JSON.stringify(m));
-
             document.getElementById('edit-mektup-subtitle').innerText = `${m.tuccar} • ${m.parti} (${m.tarih})`;
             const tbody = document.getElementById('edit-mektup-tbody');
             tbody.innerHTML = '';
@@ -2365,7 +2120,6 @@ _Hayırlı işler dileriz._`;
                     </tr>
                 `;
             });
-
             recalcEditedMektupTotal();
             document.getElementById('mektup-edit-modal').classList.remove('hidden');
         }
@@ -2383,9 +2137,7 @@ _Hayırlı işler dileriz._`;
         function recalcEditedMektupTotal() {
             if (!editingMektupObj) return;
             let total = 0;
-            editingMektupObj.items.forEach(it => {
-                total += (parseFloat(it.net) || 0) * (parseFloat(it.tuccar_fiyat) || 0);
-            });
+            editingMektupObj.items.forEach(it => { total += (parseFloat(it.net) || 0) * (parseFloat(it.tuccar_fiyat) || 0); });
             editingMektupObj.toplam_tutar = total;
             document.getElementById('edit-mektup-new-total').innerText = total.toLocaleString('tr-TR') + ' TL';
         }
@@ -2393,8 +2145,7 @@ _Hayırlı işler dileriz._`;
         async function saveEditedMektup() {
             if (!editingMektupObj) return;
             const btn = document.getElementById('btn-save-edited-mektup');
-            btn.disabled = true;
-            btn.innerText = 'Kaydediliyor...';
+            btn.disabled = true; btn.innerText = 'Kaydediliyor...';
 
             const { error } = await db.from('kesilen_mektuplar')
                 .update({ items: editingMektupObj.items, toplam_tutar: editingMektupObj.toplam_tutar })
@@ -2420,11 +2171,9 @@ _Hayırlı işler dileriz._`;
 
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Değişiklikleri Kaydet';
-
             closeMektupEditModal();
-            renderTuccarCariDetails();
-            renderKarZarar();
-            alert('Mektup fiyatları ve tüccar bakiyesi başarıyla güncellendi!');
+            refreshAllViews();
+            alert('Mektup fiyatları ve bakiyeler güncellendi!');
         }
 
         function closeMektupEditModal() {
@@ -2432,44 +2181,47 @@ _Hayırlı işler dileriz._`;
             editingMektupObj = null;
         }
 
-        // ================= KESİLMİŞ PARTİYİ ARŞİVDEN SİLME =================
+        // KESİLMİŞ PARTİYİ SİLME + PARTİ NUMARASINI SON DURUMA DÖNDÜRME
         async function deleteArsivMektupById(id) {
             const m = state.kesilenMektuplar.find(x => x.id === id);
             if (!m) return;
 
-            const onay = confirm(`DİKKAT!\n\n"${m.tuccar} - ${m.parti}" (${parseFloat(m.toplam_tutar).toLocaleString('tr-TR')} TL) partisini silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz; partiye ait mal alım kayıtları ve tüccar bakiyesi de silinecektir.`);
+            const onay = confirm(`"${m.tuccar} - ${m.parti}" (${parseFloat(m.toplam_tutar).toLocaleString('tr-TR')} TL) partisini silmek istediğinize emin misiniz?\n\nParti silinince parti numarası en sonki duruma geri döner ve Kâr/Zarar güncellenir.`);
             if (!onay) return;
 
-            const { error: aErr } = await db.from('alimlar').delete().eq('mektup_id', id);
-            if (aErr) {
-                alert('Partiye bağlı alımlar silinirken hata oluştu: ' + aErr.message);
-                return;
+            const itemIds = (m.items || []).map(i => i.id).filter(Boolean);
+            const linkedAlimIds = state.alimlar.filter(a => a.mektup_id === id).map(a => a.id);
+            const allTargetAlimIds = Array.from(new Set([...itemIds, ...linkedAlimIds]));
+
+            if (allTargetAlimIds.length > 0) {
+                const { error: aErr } = await softDeleteByIds('alimlar', allTargetAlimIds);
+                if (aErr) { alert('Parti kalemleri silinirken hata: ' + aErr.message); return; }
             }
 
-            const { error: mErr } = await db.from('kesilen_mektuplar').delete().eq('id', id);
-            if (mErr) {
-                alert('Parti silinirken hata oluştu: ' + mErr.message);
-                return;
-            }
+            const { error: mErr } = await softDeleteByIds('kesilen_mektuplar', [id]);
+            if (mErr) { alert('Parti silinirken hata: ' + mErr.message); return; }
 
-            const itemIds = new Set((m.items || []).map(i => i.id));
-            state.alimlar = state.alimlar.filter(a => a.mektup_id !== id && !itemIds.has(a.id));
             state.kesilenMektuplar = state.kesilenMektuplar.filter(x => x.id !== id);
+            const targetIdSet = new Set(allTargetAlimIds);
+            state.alimlar = state.alimlar.filter(a => a.mektup_id !== id && !targetIdSet.has(a.id));
 
-            renderTuccarCariDetails();
-            renderSonFislerList();
-            renderKarZarar();
-            alert(`"${m.parti}" başarıyla silindi.`);
+            // Tüccarın aktif partisini kalan son mektuba/partiye göre geri çek
+            const { data: { session } } = await db.auth.getSession();
+            const uid = session?.user?.id || currentUser.id;
+            const restoredPartiNo = computeRestoredPartiNo(m.tuccar, uid);
+            await db.from('tuccarlar').update({ aktif_parti: restoredPartiNo }).eq('name', m.tuccar).eq('user_id', uid);
+            const tObj = state.tuccarlar.find(t => t.name === m.tuccar);
+            if (tObj) tObj.aktif_parti = restoredPartiNo;
+
+            refreshAllViews();
         }
 
-        // ================= TÜCCAR ÖDEME TÜRÜ BUTONLARI & VADELİ ÇEK =================
+        // TÜCCAR CARİ & VADELİ ÇEK
         function selectOdemeTuru(tur, btnEl) {
             document.getElementById('tuccar-odeme-turu').value = tur;
-
             document.querySelectorAll('.odeme-tur-btn').forEach(b => {
                 b.className = 'odeme-tur-btn py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition flex flex-col items-center gap-1';
             });
-
             if (tur === 'Vadeli') {
                 btnEl.className = 'odeme-tur-btn py-2 px-2 rounded-xl text-xs font-extrabold border-2 border-amber-500 bg-amber-500 text-slate-950 transition flex flex-col items-center gap-1 shadow';
                 document.getElementById('vadeli-tarih-box').classList.remove('hidden');
@@ -2495,12 +2247,12 @@ _Hayırlı işler dileriz._`;
             const arsivList = document.getElementById('tuccar-mektup-arsiv-list');
             hareketBody.innerHTML = ''; arsivList.innerHTML = '';
 
-            if(!tuccar) { document.getElementById('tuccar-bakiye-val').innerText = '0 TL'; return; }
+            if (!tuccar) { document.getElementById('tuccar-bakiye-val').innerText = '0 TL'; return; }
 
             const mektuplar = state.kesilenMektuplar.filter(m => m.tuccar === tuccar);
-            let toplamMektupTutar = mektuplar.reduce((acc, m) => acc + (parseFloat(m.toplam_tutar) || 0), 0);
+            const toplamMektupTutar = mektuplar.reduce((acc, m) => acc + (parseFloat(m.toplam_tutar) || 0), 0);
             const odemeler = state.tuccarOdemeler.filter(o => o.tuccar === tuccar);
-            let toplamOdeme = odemeler.reduce((acc, o) => acc + (parseFloat(o.tutar) || 0), 0);
+            const toplamOdeme = odemeler.reduce((acc, o) => acc + (parseFloat(o.tutar) || 0), 0);
 
             document.getElementById('tuccar-bakiye-val').innerText = (toplamMektupTutar - toplamOdeme).toLocaleString('tr-TR') + ' TL';
 
@@ -2576,39 +2328,31 @@ _Hayırlı işler dileriz._`;
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
             const uid = session?.user?.id || currentUser.id;
-
             const tuccar = document.getElementById('cari-tuccar-select').value;
             const tutar = parseFloat(document.getElementById('tuccar-odeme-tutar').value);
             const odemeTuru = document.getElementById('tuccar-odeme-turu').value || 'Banka / Havale';
             const vadeTarihi = odemeTuru === 'Vadeli' ? document.getElementById('tuccar-cek-vade').value : null;
             const aciklama = document.getElementById('tuccar-odeme-aciklama').value.trim() || (odemeTuru === 'Vadeli' ? 'Vadeli Müşteri Çeki' : odemeTuru);
 
-            if(!tuccar) { alert('Lütfen Tüccar seçiniz!'); return; }
-            if(odemeTuru === 'Vadeli' && !vadeTarihi) { alert('Lütfen çekin vade tarihini seçiniz!'); return; }
+            if (!tuccar) { alert('Lütfen Tüccar seçiniz!'); return; }
+            if (odemeTuru === 'Vadeli' && !vadeTarihi) { alert('Çekin vade tarihini seçiniz!'); return; }
 
             const payload = {
-                user_id: uid,
-                tarih: new Date().toLocaleString('tr-TR'),
-                tuccar,
-                tutar,
-                aciklama,
-                odeme_turu: odemeTuru,
-                vade_tarihi: vadeTarihi,
-                cek_durumu: odemeTuru === 'Vadeli' ? 'Bekliyor' : 'Tahsil Edildi'
+                user_id: uid, tarih: new Date().toLocaleString('tr-TR'),
+                tuccar, tutar, aciklama, odeme_turu: odemeTuru,
+                vade_tarihi: vadeTarihi, cek_durumu: odemeTuru === 'Vadeli' ? 'Bekliyor' : 'Tahsil Edildi'
             };
 
             const { data, error } = await db.from('tuccar_odemeler').insert([payload]).select();
-
-            if(error) { alert('Tahsilat kayıt hatası: ' + error.message); return; }
-            if(data && data[0]) state.tuccarOdemeler.unshift(data[0]);
+            if (error) { alert('Tahsilat kayıt hatası: ' + error.message); return; }
+            if (data && data[0]) state.tuccarOdemeler.unshift(data[0]);
 
             renderTuccarCariDetails();
             renderKarZarar();
-
             document.getElementById('tuccar-odeme-tutar').value = '';
             document.getElementById('tuccar-odeme-aciklama').value = '';
             document.getElementById('tuccar-cek-vade').value = '';
-            alert(odemeTuru === 'Vadeli' ? 'Vadeli çek kaydedildi ve Vadeli Alacaklar listesine eklendi!' : 'Tahsilat kaydedildi!');
+            alert(odemeTuru === 'Vadeli' ? 'Vadeli çek kaydedildi ve tüccar bakiyesinden düşüldü!' : 'Tahsilat kaydedildi!');
         }
 
         async function toggleCekDurumu(odemeId, yeniDurum) {
@@ -2619,6 +2363,7 @@ _Hayırlı işler dileriz._`;
             renderKarZarar();
         }
 
+        // MÜSTAHSİL CARİ
         function renderMustahsilCariDetails() {
             const mustahsil = document.getElementById('cari-mustahsil-select').value;
             const bekleyenBody = document.getElementById('mustahsil-bekleyen-body');
@@ -2629,8 +2374,7 @@ _Hayırlı işler dileriz._`;
             const subEl = document.getElementById('mustahsil-bakiye-sub');
 
             bekleyenBody.innerHTML = ''; kapaliBody.innerHTML = '';
-
-            if(!mustahsil) {
+            if (!mustahsil) {
                 box.className = 'bg-purple-50 border border-purple-200 rounded-xl p-3.5 text-center transition';
                 label.className = 'text-[11px] font-bold text-purple-700 uppercase';
                 label.innerText = 'Müstahsile Ödenecek Bakiye';
@@ -2641,10 +2385,9 @@ _Hayırlı işler dileriz._`;
             }
 
             const alimlar = state.alimlar.filter(a => a.mustahsil === mustahsil);
-            let toplamAlacak = alimlar.reduce((acc, a) => acc + ((parseFloat(a.net) || 0) * (parseFloat(a.mustahsil_fiyat) || 0)), 0);
+            const toplamAlacak = alimlar.reduce((acc, a) => acc + ((parseFloat(a.net) || 0) * (parseFloat(a.mustahsil_fiyat) || 0)), 0);
             const odemeler = state.mustahsilOdemeler.filter(o => o.mustahsil === mustahsil);
-            let toplamOdeme = odemeler.reduce((acc, o) => acc + (parseFloat(o.tutar) || 0), 0);
-
+            const toplamOdeme = odemeler.reduce((acc, o) => acc + (parseFloat(o.tutar) || 0), 0);
             const netBakiye = toplamAlacak - toplamOdeme;
 
             if (netBakiye < 0) {
@@ -2667,10 +2410,7 @@ _Hayırlı işler dileriz._`;
             alimlar.forEach(a => {
                 const net = parseFloat(a.net) || 0;
                 const fiyat = parseFloat(a.mustahsil_fiyat) || 0;
-                const waBadge = a.whatsapp_gonderildi
-                    ? `<span class="text-[9px] text-emerald-700 font-extrabold block"><i class="fa-brands fa-whatsapp"></i> WA Gönderildi</span>`
-                    : '';
-
+                const waBadge = a.whatsapp_gonderildi ? `<span class="text-[9px] text-emerald-700 font-extrabold block"><i class="fa-brands fa-whatsapp"></i> WA Gönderildi</span>` : '';
                 bekleyenBody.innerHTML += `
                     <tr>
                         <td class="p-2.5 text-[11px]">${escapeHtml(a.tarih)}${waBadge}</td>
@@ -2678,11 +2418,7 @@ _Hayırlı işler dileriz._`;
                         <td class="p-2.5 text-right font-bold text-slate-700">${formatDecimal(net)} Kg</td>
                         <td class="p-2.5"><input type="number" inputmode="decimal" step="0.1" value="${fiyat || ''}" placeholder="0 TL" onchange="updateMustahsilPrice(${a.id}, this.value)" class="w-20 border p-1 text-xs rounded font-bold text-purple-900 bg-purple-50 outline-none"></td>
                         <td class="p-2.5 text-right font-bold text-purple-900">${(net * fiyat).toLocaleString('tr-TR')} TL</td>
-                        <td class="p-2.5 text-center">
-                            <button onclick="sendFisWhatsAppById(${a.id})" title="Fişi WhatsApp ile Gönder" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded-lg text-[11px] font-bold">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </button>
-                        </td>
+                        <td class="p-2.5 text-center"><button onclick="sendFisWhatsAppById(${a.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-1 rounded-lg text-[11px] font-bold"><i class="fa-brands fa-whatsapp"></i></button></td>
                     </tr>
                 `;
             });
@@ -2694,12 +2430,8 @@ _Hayırlı işler dileriz._`;
                         <td class="p-2.5 text-[11px] font-bold text-emerald-800">${escapeHtml(o.aciklama)}</td>
                         <td class="p-2.5 text-right font-bold text-emerald-700">${parseFloat(o.tutar).toLocaleString('tr-TR')} TL</td>
                         <td class="p-2.5 text-center whitespace-nowrap space-x-1">
-                            <button onclick="openEditOdemeModal('mustahsil', ${o.id})" title="Düzenle" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2 py-1 rounded-lg text-[11px] transition">
-                                <i class="fa-solid fa-pen"></i>
-                            </button>
-                            <button onclick="deleteOdemeRecord('mustahsil', ${o.id})" title="Sil" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px] transition">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
+                            <button onclick="openEditOdemeModal('mustahsil', ${o.id})" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2 py-1 rounded-lg text-[11px]"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteOdemeRecord('mustahsil', ${o.id})" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px]"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -2709,51 +2441,42 @@ _Hayırlı işler dileriz._`;
         async function updateMustahsilPrice(id, val) {
             const numVal = parseFloat(val) || 0;
             const { error } = await db.from('alimlar').update({ mustahsil_fiyat: numVal }).eq('id', id);
-            if(error) { alert('Fiyat güncellenemedi: ' + error.message); return; }
+            if (error) { alert('Fiyat güncellenemedi: ' + error.message); return; }
             const item = state.alimlar.find(a => a.id === id);
-            if(item) { item.mustahsil_fiyat = numVal; renderMustahsilCariDetails(); renderKarZarar(); }
+            if (item) { item.mustahsil_fiyat = numVal; renderMustahsilCariDetails(); renderKarZarar(); }
         }
 
         async function handleMustahsilOdeme(e) {
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
             const uid = session?.user?.id || currentUser.id;
-
             const mustahsil = document.getElementById('cari-mustahsil-select').value;
             const tutar = parseFloat(document.getElementById('mustahsil-odeme-tutar').value);
             const aciklama = document.getElementById('mustahsil-odeme-aciklama').value || 'Elden / Nakit Ödeme';
-            if(!mustahsil) { alert('Lütfen Müstahsil seçiniz!'); return; }
+            if (!mustahsil) { alert('Lütfen Müstahsil seçiniz!'); return; }
 
-            const { data, error } = await db.from('mustahsil_odemeler').insert([{
-                user_id: uid, tarih: new Date().toLocaleString('tr-TR'), mustahsil, tutar, aciklama
-            }]).select();
-
-            if(error) { alert('Ödeme kayıt hatası: ' + error.message); return; }
-            if(data && data[0]) state.mustahsilOdemeler.unshift(data[0]);
+            const { data, error } = await db.from('mustahsil_odemeler').insert([{ user_id: uid, tarih: new Date().toLocaleString('tr-TR'), mustahsil, tutar, aciklama }]).select();
+            if (error) { alert('Ödeme kayıt hatası: ' + error.message); return; }
+            if (data && data[0]) state.mustahsilOdemeler.unshift(data[0]);
             renderMustahsilCariDetails();
             renderKarZarar();
             document.getElementById('mustahsil-odeme-tutar').value = '';
             document.getElementById('mustahsil-odeme-aciklama').value = '';
-            alert('Müstahsil Ödemesi / Avansı kaydedildi!');
+            alert('Ödeme kaydedildi!');
         }
 
-        // ================= CARİ ÖDEME / TAHSİLAT DÜZENLEME & SİLME =================
         function openEditOdemeModal(type, id) {
             const isTuccar = type === 'tuccar';
-            const rec = isTuccar
-                ? state.tuccarOdemeler.find(o => o.id === id)
-                : state.mustahsilOdemeler.find(o => o.id === id);
+            const rec = isTuccar ? state.tuccarOdemeler.find(o => o.id === id) : state.mustahsilOdemeler.find(o => o.id === id);
             if (!rec) return;
-
             document.getElementById('edit-odeme-type').value = type;
             document.getElementById('edit-odeme-id').value = id;
             document.getElementById('edit-odeme-tutar').value = rec.tutar;
             document.getElementById('edit-odeme-aciklama').value = rec.aciklama || '';
-
+            const vadeBox = document.getElementById('edit-odeme-vade-box');
             if (isTuccar) {
                 document.getElementById('odeme-edit-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-blue-600"></i> Tüccar Tahsilatını Düzenle';
-                document.getElementById('odeme-edit-subtitle').innerText = `${rec.tuccar} • ${rec.tarih} (${rec.odeme_turu || 'Tahsilat'})`;
-                const vadeBox = document.getElementById('edit-odeme-vade-box');
+                document.getElementById('odeme-edit-subtitle').innerText = `${rec.tuccar} • ${rec.tarih}`;
                 if (rec.odeme_turu === 'Vadeli') {
                     vadeBox.classList.remove('hidden');
                     document.getElementById('edit-odeme-vade').value = rec.vade_tarihi || '';
@@ -2764,10 +2487,8 @@ _Hayırlı işler dileriz._`;
             } else {
                 document.getElementById('odeme-edit-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-purple-600"></i> Müstahsil Ödemesini Düzenle';
                 document.getElementById('odeme-edit-subtitle').innerText = `${rec.mustahsil} • ${rec.tarih}`;
-                document.getElementById('edit-odeme-vade-box').classList.add('hidden');
-                document.getElementById('edit-odeme-vade').value = '';
+                vadeBox.classList.add('hidden');
             }
-
             document.getElementById('odeme-edit-modal').classList.remove('hidden');
         }
 
@@ -2782,44 +2503,26 @@ _Hayırlı işler dileriz._`;
             const yeniTutar = parseFloat(document.getElementById('edit-odeme-tutar').value);
             const yeniAciklama = document.getElementById('edit-odeme-aciklama').value.trim();
             const yeniVade = document.getElementById('edit-odeme-vade').value;
-
-            if (isNaN(yeniTutar) || yeniTutar <= 0) {
-                alert('Lütfen geçerli bir tutar giriniz.');
-                return;
-            }
+            if (isNaN(yeniTutar) || yeniTutar <= 0) { alert('Geçerli tutar girin.'); return; }
 
             const btn = document.getElementById('btn-save-edited-odeme');
-            btn.disabled = true;
-            btn.innerText = 'Kaydediliyor...';
+            btn.disabled = true; btn.innerText = 'Kaydediliyor...';
 
             if (type === 'tuccar') {
                 const rec = state.tuccarOdemeler.find(o => o.id === id);
-                const updateFields = {
-                    tutar: yeniTutar,
-                    aciklama: yeniAciklama || (rec?.odeme_turu === 'Vadeli' ? 'Vadeli Müşteri Çeki' : (rec?.odeme_turu || 'Tahsilat'))
-                };
-                if (rec && rec.odeme_turu === 'Vadeli' && yeniVade) {
-                    updateFields.vade_tarihi = yeniVade;
-                }
-
+                const updateFields = { tutar: yeniTutar, aciklama: yeniAciklama || (rec?.odeme_turu === 'Vadeli' ? 'Vadeli Müşteri Çeki' : (rec?.odeme_turu || 'Tahsilat')) };
+                if (rec && rec.odeme_turu === 'Vadeli' && yeniVade) updateFields.vade_tarihi = yeniVade;
                 const { error } = await db.from('tuccar_odemeler').update(updateFields).eq('id', id);
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet';
-
+                btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet';
                 if (error) { alert('Güncelleme hatası: ' + error.message); return; }
                 if (rec) Object.assign(rec, updateFields);
                 closeOdemeEditModal();
                 renderTuccarCariDetails();
                 renderKarZarar();
             } else {
-                const updateFields = {
-                    tutar: yeniTutar,
-                    aciklama: yeniAciklama || 'Elden / Nakit Ödeme'
-                };
+                const updateFields = { tutar: yeniTutar, aciklama: yeniAciklama || 'Elden / Nakit Ödeme' };
                 const { error } = await db.from('mustahsil_odemeler').update(updateFields).eq('id', id);
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet';
-
+                btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet';
                 if (error) { alert('Güncelleme hatası: ' + error.message); return; }
                 const rec = state.mustahsilOdemeler.find(o => o.id === id);
                 if (rec) Object.assign(rec, updateFields);
@@ -2831,17 +2534,12 @@ _Hayırlı işler dileriz._`;
 
         async function deleteOdemeRecord(type, id) {
             const isTuccar = type === 'tuccar';
-            const rec = isTuccar
-                ? state.tuccarOdemeler.find(o => o.id === id)
-                : state.mustahsilOdemeler.find(o => o.id === id);
+            const rec = isTuccar ? state.tuccarOdemeler.find(o => o.id === id) : state.mustahsilOdemeler.find(o => o.id === id);
             if (!rec) return;
-
-            const kisi = isTuccar ? rec.tuccar : rec.mustahsil;
-            const onay = confirm(`"${kisi}" için ${parseFloat(rec.tutar).toLocaleString('tr-TR')} TL tutarındaki ödeme/tahsilat kaydını silmek istediğinize emin misiniz?`);
-            if (!onay) return;
+            if (!confirm(`"${isTuccar ? rec.tuccar : rec.mustahsil}" için ${parseFloat(rec.tutar).toLocaleString('tr-TR')} TL kaydı silmek istediğinize emin misiniz?`)) return;
 
             const table = isTuccar ? 'tuccar_odemeler' : 'mustahsil_odemeler';
-            const { error } = await db.from(table).delete().eq('id', id);
+            const { error } = await softDeleteByIds(table, [id]);
             if (error) { alert('Silme hatası: ' + error.message); return; }
 
             if (isTuccar) {
@@ -2854,7 +2552,7 @@ _Hayırlı işler dileriz._`;
             renderKarZarar();
         }
 
-        // ================= KÂR / ZARAR, GENEL BAKİYELER & VADELİ ÇEKLER =================
+        // KÂR / ZARAR
         function renderKarZarar() {
             let totalTuccarCiro = 0, totalMustahsilMaliyet = 0;
             state.kesilenMektuplar.forEach(m => { totalTuccarCiro += parseFloat(m.toplam_tutar) || 0; });
@@ -2864,12 +2562,9 @@ _Hayırlı işler dileriz._`;
             document.getElementById('summary-mustahsil-maliyet').innerText = totalMustahsilMaliyet.toLocaleString('tr-TR') + ' TL';
             document.getElementById('summary-net-kar').innerText = (totalTuccarCiro - totalMustahsilMaliyet).toLocaleString('tr-TR') + ' TL';
 
-            let totalTuccarAlinan = 0;
-            state.tuccarOdemeler.forEach(o => { totalTuccarAlinan += parseFloat(o.tutar) || 0; });
+            const totalTuccarAlinan = state.tuccarOdemeler.reduce((acc, o) => acc + (parseFloat(o.tutar) || 0), 0);
             const totalTuccarKalanAlacak = totalTuccarCiro - totalTuccarAlinan;
-
-            let totalMustahsilOdenen = 0;
-            state.mustahsilOdemeler.forEach(o => { totalMustahsilOdenen += parseFloat(o.tutar) || 0; });
+            const totalMustahsilOdenen = state.mustahsilOdemeler.reduce((acc, o) => acc + (parseFloat(o.tutar) || 0), 0);
             const totalMustahsilKalanBorc = totalMustahsilMaliyet - totalMustahsilOdenen;
 
             document.getElementById('summary-tuccar-alinan').innerText = totalTuccarAlinan.toLocaleString('tr-TR') + ' TL';
@@ -2903,18 +2598,16 @@ _Hayırlı işler dileriz._`;
 
             const tbody = document.getElementById('vadeli-cekler-tbody');
             tbody.innerHTML = '';
-
             let bekleyenVadeliToplam = 0;
 
             if (vadeliList.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" class="text-center p-5 text-slate-400 text-xs">Henüz kayıtlı vadeli çek / alacak bulunmuyor. Tüccar Cari ekranından "Vadeli (Çek)" seçerek ekleyebilirsiniz.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center p-5 text-slate-400 text-xs">Henüz kayıtlı vadeli çek bulunmuyor.</td></tr>';
             }
 
             vadeliList.forEach(c => {
                 const tutar = parseFloat(c.tutar) || 0;
                 const isBekliyor = (c.cek_durumu || 'Bekliyor') === 'Bekliyor';
                 if (isBekliyor) bekleyenVadeliToplam += tutar;
-
                 const remDays = c.vade_tarihi ? calculateRemainingDays(c.vade_tarihi) : null;
                 let gunEtiketi = '';
                 if (isBekliyor && remDays !== null) {
@@ -2922,11 +2615,9 @@ _Hayırlı işler dileriz._`;
                     else if (remDays === 0) gunEtiketi = `<span class="text-[10px] font-bold text-amber-600 block">Bugün vade günü!</span>`;
                     else gunEtiketi = `<span class="text-[10px] font-semibold text-slate-500 block">${remDays} gün kaldı</span>`;
                 }
-
                 const durumBadge = isBekliyor
                     ? `<span class="bg-amber-100 text-amber-900 text-[10px] px-2.5 py-1 rounded-full font-extrabold">Bekliyor</span>`
                     : `<span class="bg-emerald-100 text-emerald-800 text-[10px] px-2.5 py-1 rounded-full font-extrabold">Tahsil Edildi</span>`;
-
                 const aksiyonBtn = isBekliyor
                     ? `<button onclick="toggleCekDurumu(${c.id}, 'Tahsil Edildi')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1 rounded-lg text-[11px] transition">Tahsil Edildi Yap</button>`
                     : `<button onclick="toggleCekDurumu(${c.id}, 'Bekliyor')" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-2.5 py-1 rounded-lg text-[11px] transition">Geri Al</button>`;
@@ -2942,19 +2633,17 @@ _Hayırlı işler dileriz._`;
                     </tr>
                 `;
             });
-
             document.getElementById('summary-vadeli-toplam').innerText = bekleyenVadeliToplam.toLocaleString('tr-TR') + ' TL';
         }
 
-        // Tanımlamalar
+        // TANIMLAMALAR + MÜSTAHSİL SİLME UYARISI
         async function handleAddUrun(e) {
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
-            const uid = session?.user?.id || currentUser.id;
             const name = document.getElementById('def-urun-name').value.trim();
-            if(!name) return;
-            const { data, error } = await db.from('urunler').insert([{ user_id: uid, name }]).select();
-            if(error) { alert('Hata: ' + error.message); return; }
+            if (!name) return;
+            const { data, error } = await db.from('urunler').insert([{ user_id: session?.user?.id || currentUser.id, name }]).select();
+            if (error) { alert('Hata: ' + error.message); return; }
             state.urunler.push(data[0]); populateSelects(); renderTanimListeleri();
             document.getElementById('def-urun-name').value = '';
         }
@@ -2962,12 +2651,11 @@ _Hayırlı işler dileriz._`;
         async function handleAddMustahsil(e) {
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
-            const uid = session?.user?.id || currentUser.id;
             const name = document.getElementById('def-mustahsil-name').value.trim();
             const phone = document.getElementById('def-mustahsil-phone').value.trim() || '';
-            if(!name) return;
-            const { data, error } = await db.from('mustahsiller').insert([{ user_id: uid, name, phone }]).select();
-            if(error) { alert('Hata: ' + error.message); return; }
+            if (!name) return;
+            const { data, error } = await db.from('mustahsiller').insert([{ user_id: session?.user?.id || currentUser.id, name, phone }]).select();
+            if (error) { alert('Hata: ' + error.message); return; }
             state.mustahsiller.push(data[0]); populateSelects(); renderTanimListeleri();
             document.getElementById('def-mustahsil-name').value = '';
             document.getElementById('def-mustahsil-phone').value = '';
@@ -2976,12 +2664,11 @@ _Hayırlı işler dileriz._`;
         async function handleAddTuccar(e) {
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
-            const uid = session?.user?.id || currentUser.id;
             const name = document.getElementById('def-tuccar-name').value.trim();
             const phone = document.getElementById('def-tuccar-phone').value.trim() || '';
-            if(!name) return;
-            const { data, error } = await db.from('tuccarlar').insert([{ user_id: uid, name, phone, aktif_parti: 1 }]).select();
-            if(error) { alert('Hata: ' + error.message); return; }
+            if (!name) return;
+            const { data, error } = await db.from('tuccarlar').insert([{ user_id: session?.user?.id || currentUser.id, name, phone, aktif_parti: 1 }]).select();
+            if (error) { alert('Hata: ' + error.message); return; }
             state.tuccarlar.push(data[0]); populateSelects(); renderTanimListeleri();
             document.getElementById('def-tuccar-name').value = '';
             document.getElementById('def-tuccar-phone').value = '';
@@ -2990,63 +2677,98 @@ _Hayırlı işler dileriz._`;
         async function handleAddKasa(e) {
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
-            const uid = session?.user?.id || currentUser.id;
             const name = document.getElementById('def-kasa-name').value.trim();
             const dara = parseFloat(document.getElementById('def-kasa-dara').value);
-            if(!name || isNaN(dara)) return;
-            const { data, error } = await db.from('kasalar').insert([{ user_id: uid, name, dara }]).select();
-            if(error) { alert('Hata: ' + error.message); return; }
+            if (!name || isNaN(dara)) return;
+            const { data, error } = await db.from('kasalar').insert([{ user_id: session?.user?.id || currentUser.id, name, dara }]).select();
+            if (error) { alert('Hata: ' + error.message); return; }
             state.kasalar.push(data[0]); populateSelects(); renderTanimListeleri();
             document.getElementById('def-kasa-name').value = '';
             document.getElementById('def-kasa-dara').value = '';
         }
 
         async function deleteTanim(table, id) {
-            if(!confirm('Bu tanımı silmek istediğinizden emin misiniz?')) return;
-            const { error } = await db.from(table).delete().eq('id', id);
-            if(error) { alert('Silme hatası: ' + error.message); return; }
-            state[table] = state[table].filter(item => item.id !== id);
-            populateSelects(); renderTanimListeleri();
+            const item = state[table]?.find(x => x.id === id);
+            if (!item) return;
+
+            if (table === 'mustahsiller') {
+                const mAlimlar = state.alimlar.filter(a => a.mustahsil === item.name);
+                const mOdemeler = state.mustahsilOdemeler.filter(o => o.mustahsil === item.name);
+                const alacak = mAlimlar.reduce((s, a) => s + ((parseFloat(a.net) || 0) * (parseFloat(a.mustahsil_fiyat) || 0)), 0);
+                const odenen = mOdemeler.reduce((s, o) => s + (parseFloat(o.tutar) || 0), 0);
+                const bakiye = alacak - odenen;
+
+                const uyari = (mAlimlar.length > 0 || mOdemeler.length > 0 || bakiye !== 0)
+                    ? `Emin misin? Kayıtlar tüm silinecek.\n\n"${item.name}" müstahsiline ait ${mAlimlar.length} alım ve ${mOdemeler.length} ödeme kaydı (Güncel Bakiye: ${bakiye.toLocaleString('tr-TR')} TL) silinecek ve Kâr/Zarar güncellenecektir.`
+                    : `Emin misin? "${item.name}" müstahsil kaydı silinecek.`;
+
+                if (!confirm(uyari)) return;
+
+                const alimIds = mAlimlar.map(a => a.id);
+                const odemeIds = mOdemeler.map(o => o.id);
+                if (alimIds.length > 0) await softDeleteByIds('alimlar', alimIds);
+                if (odemeIds.length > 0) await softDeleteByIds('mustahsil_odemeler', odemeIds);
+
+                const { error } = await softDeleteByIds('mustahsiller', [id]);
+                if (error) { alert('Silme hatası: ' + error.message); return; }
+
+                state.mustahsiller = state.mustahsiller.filter(m => m.id !== id);
+                state.alimlar = state.alimlar.filter(a => a.mustahsil !== item.name);
+                state.mustahsilOdemeler = state.mustahsilOdemeler.filter(o => o.mustahsil !== item.name);
+                populateSelects();
+                renderTanimListeleri();
+                refreshAllViews();
+                return;
+            }
+
+            if (!confirm(`Emin misin? "${item.name}" kaydı silinecek.`)) return;
+            const { error } = await softDeleteByIds(table, [id]);
+            if (error) { alert('Silme hatası: ' + error.message); return; }
+            state[table] = state[table].filter(x => x.id !== id);
+            populateSelects();
+            renderTanimListeleri();
+            calculateNetKilo();
         }
 
         async function editTanim(table, id) {
             const item = state[table].find(x => x.id === id);
-            if(!item) return;
+            if (!item) return;
 
-            if(table === 'mustahsiller') {
+            if (table === 'mustahsiller') {
                 const newName = prompt('Müstahsil Adı:', item.name);
                 const newPhone = prompt('WhatsApp Telefon No:', item.phone || '');
-                if(newName) {
+                if (newName) {
                     const { error } = await db.from('mustahsiller').update({ name: newName.trim(), phone: newPhone || '' }).eq('id', id);
-                    if(!error) { item.name = newName.trim(); item.phone = newPhone || ''; }
+                    if (!error) { item.name = newName.trim(); item.phone = newPhone || ''; }
                 }
-            } else if(table === 'tuccarlar') {
+            } else if (table === 'tuccarlar') {
                 const newName = prompt('Tüccar Firma Adı:', item.name);
                 const newPhone = prompt('WhatsApp Telefon No:', item.phone || '');
-                if(newName) {
+                if (newName) {
                     const { error } = await db.from('tuccarlar').update({ name: newName.trim(), phone: newPhone || '' }).eq('id', id);
-                    if(!error) { item.name = newName.trim(); item.phone = newPhone || ''; }
+                    if (!error) { item.name = newName.trim(); item.phone = newPhone || ''; }
                 }
-            } else if(table === 'urunler') {
+            } else if (table === 'urunler') {
                 const newName = prompt('Yeni Ad:', item.name);
-                if(newName) {
+                if (newName) {
                     const { error } = await db.from(table).update({ name: newName.trim() }).eq('id', id);
-                    if(!error) item.name = newName.trim();
+                    if (!error) item.name = newName.trim();
                 }
-            } else if(table === 'kasalar') {
+            } else if (table === 'kasalar') {
                 const newName = prompt('Kasa Adı:', item.name);
-                const newDaraStr = prompt('Kasa Darası (Kg, Örn: 0.35):', formatDecimal(item.dara));
-                const newDara = parseFloat(newDaraStr);
-                if(newName && !isNaN(newDara)) {
+                const newDara = parseFloat(prompt('Kasa Darası (Kg, Örn: 0.35):', formatDecimal(item.dara)));
+                if (newName && !isNaN(newDara)) {
                     const { error } = await db.from('kasalar').update({ name: newName.trim(), dara: newDara }).eq('id', id);
-                    if(!error) { item.name = newName.trim(); item.dara = newDara; }
+                    if (!error) { item.name = newName.trim(); item.dara = newDara; }
                 }
             }
-            populateSelects(); renderTanimListeleri(); calculateNetKilo();
+            populateSelects();
+            renderTanimListeleri();
+            calculateNetKilo();
         }
 
         function renderTanimListeleri() {
-            document.getElementById('list-urun').innerHTML = state.urunler.map(u => 
+            document.getElementById('list-urun').innerHTML = state.urunler.map(u =>
                 `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(u.name)}</span><span><button onclick="editTanim('urunler', ${u.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('urunler', ${u.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`
             ).join('');
 
@@ -3060,7 +2782,7 @@ _Hayırlı işler dileriz._`;
                 return `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(t.name)}<small class="text-slate-400">${phone}</small></span><span><button onclick="editTanim('tuccarlar', ${t.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('tuccarlar', ${t.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`;
             }).join('');
 
-            document.getElementById('list-kasa').innerHTML = state.kasalar.map(k => 
+            document.getElementById('list-kasa').innerHTML = state.kasalar.map(k =>
                 `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(k.name)} (${formatDecimal(k.dara)} Kg)</span><span><button onclick="editTanim('kasalar', ${k.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`
             ).join('');
         }
