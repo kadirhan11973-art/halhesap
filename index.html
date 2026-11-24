@@ -27,13 +27,29 @@
         /* 80mm Termal Fiş Görünümü */
         .thermal-receipt {
             width: 100%;
-            max-width: 320px;
+            max-width: 340px;
             font-family: 'Courier New', Courier, monospace;
             background: #fff;
-            padding: 15px;
+            padding: 16px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.08);
             border: 1px solid #e2e8f0;
             color: #111;
+            font-size: 13.5px;
+            line-height: 1.45;
+        }
+        .thermal-receipt .rec-sub {
+            font-size: 12.5px;
+        }
+        .thermal-receipt .rec-title {
+            font-size: 16px;
+            font-weight: 800;
+        }
+        .thermal-receipt .rec-net-big {
+            font-size: 16.5px;
+            font-weight: 900;
+        }
+        .thermal-receipt .rec-footer {
+            font-size: 12px;
         }
 
         /* Antetli Kağıt (Mektup) Görünümü */
@@ -61,13 +77,31 @@
                 left: 0;
                 top: 0;
                 width: 80mm;
+                max-width: 80mm;
                 padding: 4mm;
                 font-family: 'Courier New', Courier, monospace;
-                font-size: 11px;
+                font-size: 13px;
+                line-height: 1.45;
+                font-weight: 600;
                 color: #000;
                 background: #fff;
                 box-shadow: none;
                 border: none;
+            }
+            body.print-mode-receipt #receipt-print-area .rec-title {
+                font-size: 15.5px;
+                font-weight: 900;
+            }
+            body.print-mode-receipt #receipt-print-area .rec-sub {
+                font-size: 12.5px;
+            }
+            body.print-mode-receipt #receipt-print-area .rec-net-big {
+                font-size: 16px;
+                font-weight: 900;
+            }
+            body.print-mode-receipt #receipt-print-area .rec-footer {
+                font-size: 12px;
+                font-weight: 700;
             }
 
             body.print-mode-letter #mektup-modal-content,
@@ -453,7 +487,7 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-xs font-bold text-slate-600 mb-1">Brüt Kilo (Kantar)</label>
-                                        <input type="number" inputmode="decimal" id="alim-brut-kilo" step="0.1" value="250" oninput="markAlimFormDirty(); calculateNetKilo();" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-extrabold focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="0.0">
+                                        <input type="number" inputmode="decimal" id="alim-brut-kilo" step="0.01" value="250" oninput="markAlimFormDirty(); calculateNetKilo();" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-extrabold focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="0.0">
                                     </div>
                                     <div>
                                         <label class="block text-xs font-bold text-emerald-700 mb-1">Net Kilo (Dara Düşük)</label>
@@ -481,24 +515,24 @@
                         </div>
                     </div>
 
-                    <div class="lg:col-span-5 flex flex-col items-center">
-                        <div class="mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider no-print">80mm Lazer Termal Fiş Önizleme</div>
+                    <div class="lg:col-span-5 flex flex-col items-center space-y-4">
+                        <div class="mb-0 text-xs font-bold text-slate-500 uppercase tracking-wider no-print">80mm Lazer Termal Fiş Önizleme</div>
                         
                         <div id="receipt-print-area" class="thermal-receipt rounded-2xl">
                             <div class="text-center border-b border-dashed border-slate-400 pb-3 mb-3">
-                                <h3 id="rec-firma-adi" class="font-bold text-sm uppercase tracking-wider">HAL HESAP OTOMASYONU</h3>
-                                <p id="rec-firma-adres" class="text-[11px]">---</p>
-                                <p class="text-xs mt-1">Tarih: <span id="rec-tarih">--.--.---- --:--</span></p>
-                                <p class="text-xs font-bold mt-1">FİŞ NO: #<span id="rec-no">0000</span></p>
+                                <h3 id="rec-firma-adi" class="rec-title uppercase tracking-wider">HAL HESAP OTOMASYONU</h3>
+                                <p id="rec-firma-adres" class="rec-sub mt-0.5">---</p>
+                                <p class="rec-sub mt-1">Tarih: <span id="rec-tarih">--.--.---- --:--</span></p>
+                                <p class="rec-sub font-bold mt-1">FİŞ NO: #<span id="rec-no">0000</span></p>
                             </div>
 
-                            <div class="space-y-1 text-xs mb-3 border-b border-dashed border-slate-400 pb-3">
-                                <div class="flex justify-between"><span>Gidecek Tüccar:</span> <strong id="rec-tuccar" class="uppercase">---</strong></div>
-                                <div class="flex justify-between"><span>Parti / Sevk No:</span> <strong id="rec-parti" class="uppercase">---</strong></div>
-                                <div class="flex justify-between"><span>Müstahsil:</span> <strong id="rec-mustahsil" class="uppercase">---</strong></div>
+                            <div class="space-y-1.5 rec-sub mb-3 border-b border-dashed border-slate-400 pb-3">
+                                <div class="flex justify-between gap-2"><span>Gidecek Tüccar:</span> <strong id="rec-tuccar" class="uppercase text-right">---</strong></div>
+                                <div class="flex justify-between gap-2"><span>Parti / Sevk No:</span> <strong id="rec-parti" class="uppercase text-right">---</strong></div>
+                                <div class="flex justify-between gap-2"><span>Müstahsil:</span> <strong id="rec-mustahsil" class="uppercase text-right">---</strong></div>
                             </div>
 
-                            <table class="w-full text-xs text-left mb-3">
+                            <table class="w-full rec-sub text-left mb-3">
                                 <thead>
                                     <tr class="border-b border-slate-300">
                                         <th class="py-1">Ürün</th>
@@ -508,22 +542,39 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td id="rec-urun" class="py-1 font-semibold">---</td>
-                                        <td id="rec-kasa-detay" class="py-1 text-center">10 Ad (20 Kg Dara)</td>
-                                        <td id="rec-net-kilo" class="py-1 text-right font-bold text-sm">0 Kg</td>
+                                        <td id="rec-urun" class="py-1.5 font-bold">---</td>
+                                        <td id="rec-kasa-detay" class="py-1.5 text-center font-semibold">10 Ad (20 Kg Dara)</td>
+                                        <td id="rec-net-kilo" class="py-1.5 text-right font-extrabold">0 Kg</td>
                                     </tr>
                                 </tbody>
                             </table>
 
-                            <div class="border-t border-dashed border-slate-400 pt-2 text-xs space-y-1">
-                                <div class="flex justify-between"><span>Brüt Kilo:</span> <span id="rec-brut">0 Kg</span></div>
-                                <div class="flex justify-between"><span>Toplam Dara:</span> <span id="rec-dara">0 Kg</span></div>
-                                <div class="flex justify-between font-bold text-sm pt-1 border-t border-slate-200"><span>NET KİLO:</span> <span id="rec-net-total">0 Kg</span></div>
+                            <div class="border-t border-dashed border-slate-400 pt-2.5 rec-sub space-y-1.5">
+                                <div class="flex justify-between"><span>Brüt Kilo:</span> <span id="rec-brut" class="font-bold">0 Kg</span></div>
+                                <div class="flex justify-between"><span>Toplam Dara:</span> <span id="rec-dara" class="font-bold">0 Kg</span></div>
+                                <div class="flex justify-between rec-net-big pt-1.5 border-t border-slate-300"><span>NET KİLO:</span> <span id="rec-net-total">0 Kg</span></div>
                             </div>
 
-                            <div class="text-center text-[10px] text-slate-500 mt-6 pt-2 border-t border-slate-300">
-* Söz Uçar Yazı Kalır - Hal Kayıt Belgesidir *
+                            <div class="text-center rec-footer text-slate-600 mt-5 pt-2.5 border-t border-slate-300">
+- Söz Uçar Yazı Kalır - Hal Kayıt Belgesidir *
                             </div>
+                        </div>
+
+                        <!-- Fiş Önizleme Altı: Hızlı Müstahsil Ekleme Kartı -->
+                        <div class="w-full max-w-[340px] bg-white p-4 rounded-2xl shadow-sm border border-purple-200 no-print">
+                            <div class="flex items-center justify-between mb-2.5">
+                                <h3 class="text-xs sm:text-sm font-extrabold text-slate-800 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-plus text-purple-600"></i> Hızlı Müstahsil Ekle
+                                </h3>
+                                <span class="text-[10px] bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded-full">Fiş Altı Hızlı Kayıt</span>
+                            </div>
+                            <form onsubmit="handleQuickAddMustahsil(event)" class="space-y-2">
+                                <input type="text" id="quick-mustahsil-name" placeholder="Müstahsil Adı Soyadı" required class="w-full bg-slate-50 border border-slate-300 p-2 text-xs font-semibold rounded-lg outline-none focus:border-purple-500">
+                                <input type="tel" inputmode="numeric" id="quick-mustahsil-phone" placeholder="WhatsApp Tel (Opsiyonel)" class="w-full bg-slate-50 border border-slate-300 p-2 text-xs rounded-lg outline-none focus:border-purple-500">
+                                <button type="submit" id="btn-quick-mustahsil" class="w-full bg-purple-600 hover:bg-purple-700 active:scale-[0.99] text-white font-extrabold py-2 rounded-lg text-xs shadow-sm transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-plus"></i> Müstahsili Ekle & Fişte Seç
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -630,7 +681,7 @@
 
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600 mb-1">Tutar (TL)</label>
-                                    <input type="number" inputmode="decimal" step="0.01" id="tuccar-odeme-tutar" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-bold outline-none focus:border-blue-500" placeholder="Örn: 200000">
+                                    <input type="number" inputmode="decimal" step="0.01" id="tuccar-odeme-tutar" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-bold outline-none focus:border-blue-500" placeholder="Örn: 20000">
                                 </div>
 
                                 <div>
@@ -658,13 +709,14 @@
                                 <i class="fa-solid fa-list-check text-slate-600"></i> Cari Bakiye Hareketleri
                             </h3>
                             <div class="overflow-x-auto -mx-4 sm:mx-0">
-                                <table class="w-full text-xs sm:text-sm text-left min-w-[440px]">
+                                <table class="w-full text-xs sm:text-sm text-left min-w-[540px]">
                                     <thead class="bg-slate-100 text-slate-600 uppercase text-[10px]">
                                         <tr>
                                             <th class="p-2.5">Tarih</th>
                                             <th class="p-2.5">Tür</th>
                                             <th class="p-2.5">Açıklama / Vade</th>
                                             <th class="p-2.5 text-right">Tutar</th>
+                                            <th class="p-2.5 text-center">İşlem</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tuccar-hareket-body" class="divide-y divide-slate-200"></tbody>
@@ -701,7 +753,7 @@
                             <form onsubmit="handleMustahsilOdeme(event)" class="space-y-3">
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600 mb-1">Ödenen Tutar (TL)</label>
-                                    <input type="number" inputmode="decimal" step="0.01" id="mustahsil-odeme-tutar" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-bold outline-none" placeholder="Örn: 15000">
+                                    <input type="number" inputmode="decimal" step="0.01" id="mustahsil-odeme-tutar" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-bold outline-none" placeholder="Örn: 20000">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-600 mb-1">Açıklama / Not</label>
@@ -741,12 +793,13 @@
                                 <i class="fa-solid fa-circle-check text-emerald-600"></i> Yapılan Ödeme ve Avans Geçmişi
                             </h3>
                             <div class="overflow-x-auto -mx-4 sm:mx-0">
-                                <table class="w-full text-xs text-left min-w-[400px]">
+                                <table class="w-full text-xs text-left min-w-[480px]">
                                     <thead class="bg-emerald-50 text-emerald-800 uppercase text-[10px]">
                                         <tr>
                                             <th class="p-2.5">Tarih</th>
                                             <th class="p-2.5">Açıklama</th>
                                             <th class="p-2.5 text-right">Ödenen Tutar</th>
+                                            <th class="p-2.5 text-center">İşlem</th>
                                         </tr>
                                     </thead>
                                     <tbody id="mustahsil-kapali-body" class="divide-y divide-slate-200"></tbody>
@@ -920,7 +973,7 @@
                         <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-box text-amber-600 mr-1"></i> Kasa Daraları</h3>
                         <form onsubmit="handleAddKasa(event)" class="space-y-2 mb-3">
                             <input type="text" id="def-kasa-name" placeholder="Kasa Adı" required class="w-full border p-2 text-xs rounded-lg outline-none">
-                            <input type="number" inputmode="decimal" step="0.1" id="def-kasa-dara" placeholder="Dara (Kg)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                            <input type="number" inputmode="decimal" step="0.01" id="def-kasa-dara" placeholder="Dara (Kg, Örn: 0.35)" required class="w-full border p-2 text-xs rounded-lg outline-none">
                             <button type="submit" class="w-full bg-slate-800 text-white font-bold py-1.5 rounded-lg text-xs">Ekle</button>
                         </form>
                         <ul id="list-kasa" class="divide-y text-xs max-h-40 overflow-y-auto"></ul>
@@ -1032,6 +1085,50 @@
         </div>
     </div>
 
+    <!-- ================= MODAL 4: CARİ ÖDEME / TAHSİLAT DÜZENLEME ================= -->
+    <div id="odeme-edit-modal" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-200 mb-4">
+                <div>
+                    <h3 id="odeme-edit-title" class="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-blue-600"></i> Ödeme / Tahsilat Düzenle
+                    </h3>
+                    <p id="odeme-edit-subtitle" class="text-xs text-slate-500 mt-0.5">Kayıt detayı</p>
+                </div>
+                <button onclick="closeOdemeEditModal()" class="text-slate-400 hover:text-slate-800 text-2xl font-bold leading-none">&times;</button>
+            </div>
+
+            <form onsubmit="saveEditedOdeme(event)" class="space-y-3">
+                <input type="hidden" id="edit-odeme-type">
+                <input type="hidden" id="edit-odeme-id">
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Tutar (TL)</label>
+                    <input type="number" inputmode="decimal" step="0.01" id="edit-odeme-tutar" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-extrabold text-slate-900 outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Açıklama / Not</label>
+                    <input type="text" id="edit-odeme-aciklama" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div id="edit-odeme-vade-box" class="hidden">
+                    <label class="block text-xs font-bold text-amber-900 mb-1">Çek Vade Tarihi</label>
+                    <input type="date" id="edit-odeme-vade" class="w-full bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-sm font-bold text-slate-900 outline-none">
+                </div>
+
+                <div class="pt-2 flex gap-2.5">
+                    <button type="submit" id="btn-save-edited-odeme" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 rounded-xl text-sm shadow transition">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet
+                    </button>
+                    <button type="button" onclick="closeOdemeEditModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-sm transition">
+                        Vazgeç
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
         const SUPABASE_URL = 'https://zyknxulieisyavzfcekd.supabase.co';
@@ -1077,6 +1174,14 @@
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#39;');
+        }
+
+        // Ondalık kayan nokta hatalarını önleyen temiz sayı formatlayıcı (ör: 0.35 * 10 = 3.5, 0.35 * 3 = 1.05)
+        function formatDecimal(num, maxDecimals = 2) {
+            const val = Number(num) || 0;
+            const factor = Math.pow(10, maxDecimals);
+            const rounded = Math.round(val * factor) / factor;
+            return parseFloat(rounded.toFixed(maxDecimals)).toString();
         }
 
         // Türkçe karakterleri otomatik İngilizceye çeviren sağlam yardımcı fonksiyon
@@ -1511,7 +1616,7 @@
             if(tabId === 'kar-zarar') renderKarZarar();
         }
 
-        function populateSelects() {
+        function populateSelects(forceSelectedMustahsil = null) {
             const tuccarSelects = ['alim-tuccar', 'mektup-tuccar-select', 'cari-tuccar-select'];
             tuccarSelects.forEach(id => {
                 const el = document.getElementById(id);
@@ -1526,7 +1631,7 @@
             mustahsilSelects.forEach(id => {
                 const el = document.getElementById(id);
                 if(!el) return;
-                const val = el.value;
+                const val = (id === 'alim-mustahsil' && forceSelectedMustahsil) ? forceSelectedMustahsil : el.value;
                 el.innerHTML = '<option value="">Müstahsil Seçiniz...</option>';
                 state.mustahsiller.forEach(m => el.innerHTML += `<option value="${escapeHtml(m.name)}">${escapeHtml(m.name)}</option>`);
                 el.value = val;
@@ -1544,7 +1649,7 @@
             if(kasaSelect) {
                 const val = kasaSelect.value;
                 kasaSelect.innerHTML = '<option value="">Kasa Seç...</option>';
-                state.kasalar.forEach(k => kasaSelect.innerHTML += `<option value="${k.id}">${escapeHtml(k.name)} (${k.dara} Kg)</option>`);
+                state.kasalar.forEach(k => kasaSelect.innerHTML += `<option value="${k.id}">${escapeHtml(k.name)} (${formatDecimal(k.dara)} Kg)</option>`);
                 kasaSelect.value = val || (state.kasalar[0]?.id || '');
             }
         }
@@ -1570,11 +1675,11 @@
             const kasaObj = state.kasalar.find(k => String(k.id) === String(kasaId));
             if(kasaObj) singleDara = parseFloat(kasaObj.dara) || 0;
 
-            const totalDara = singleDara * adet;
-            const net = Math.max(0, brut - totalDara);
+            const totalDara = Math.round((singleDara * adet) * 100) / 100;
+            const net = Math.max(0, Math.round((brut - totalDara) * 100) / 100);
 
-            document.getElementById('alim-toplam-dara').value = totalDara.toFixed(1);
-            document.getElementById('alim-net-kilo').value = net.toFixed(1);
+            document.getElementById('alim-toplam-dara').value = formatDecimal(totalDara);
+            document.getElementById('alim-net-kilo').value = formatDecimal(net);
 
             document.getElementById('rec-tarih').innerText = currentSavedAlimRecord ? currentSavedAlimRecord.tarih : new Date().toLocaleString('tr-TR');
             document.getElementById('rec-no').innerText = currentSavedAlimRecord ? currentSavedAlimRecord.id : 'YENİ';
@@ -1582,11 +1687,58 @@
             document.getElementById('rec-parti').innerText = document.getElementById('alim-parti-display').value || '---';
             document.getElementById('rec-mustahsil').innerText = document.getElementById('alim-mustahsil').value || '---';
             document.getElementById('rec-urun').innerText = document.getElementById('alim-urun').value || '---';
-            document.getElementById('rec-kasa-detay').innerText = `${adet} Ad (${totalDara.toFixed(1)} Kg Dara)`;
-            document.getElementById('rec-brut').innerText = brut + ' Kg';
-            document.getElementById('rec-dara').innerText = totalDara.toFixed(1) + ' Kg';
-            document.getElementById('rec-net-kilo').innerText = net.toFixed(1) + ' Kg';
-            document.getElementById('rec-net-total').innerText = net.toFixed(1) + ' Kg';
+            document.getElementById('rec-kasa-detay').innerText = `${adet} Ad (${formatDecimal(totalDara)} Kg Dara)`;
+            document.getElementById('rec-brut').innerText = formatDecimal(brut) + ' Kg';
+            document.getElementById('rec-dara').innerText = formatDecimal(totalDara) + ' Kg';
+            document.getElementById('rec-net-kilo').innerText = formatDecimal(net) + ' Kg';
+            document.getElementById('rec-net-total').innerText = formatDecimal(net) + ' Kg';
+        }
+
+        // Fiş Önizleme Altından Hızlı Müstahsil Ekleme
+        async function handleQuickAddMustahsil(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('quick-mustahsil-name');
+            const phoneInput = document.getElementById('quick-mustahsil-phone');
+            const btn = document.getElementById('btn-quick-mustahsil');
+
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim() || '';
+            if (!name) return;
+
+            const existing = state.mustahsiller.find(m => m.name.toLowerCase() === name.toLowerCase());
+            if (existing) {
+                populateSelects(existing.name);
+                markAlimFormDirty();
+                calculateNetKilo();
+                nameInput.value = '';
+                phoneInput.value = '';
+                alert(`"${existing.name}" zaten kayıtlı, fiş formunda seçildi.`);
+                return;
+            }
+
+            const { data: { session } } = await db.auth.getSession();
+            const uid = session?.user?.id || currentUser.id;
+
+            btn.disabled = true;
+            const origHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ekleniyor...';
+
+            const { data, error } = await db.from('mustahsiller').insert([{ user_id: uid, name, phone }]).select();
+
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+
+            if (error) { alert('Hata: ' + error.message); return; }
+
+            if (data && data[0]) {
+                state.mustahsiller.push(data[0]);
+                populateSelects(data[0].name);
+                renderTanimListeleri();
+                markAlimFormDirty();
+                calculateNetKilo();
+                nameInput.value = '';
+                phoneInput.value = '';
+            }
         }
 
         // Çift Kayıt Engelleme Yardımcıları
@@ -1607,7 +1759,6 @@
         }
 
         async function saveAlimRecord() {
-            // Eğer bu form zaten kaydedildiyse ve değiştirilmediyse ikinci kez veritabanına ekleme!
             if (currentSavedAlimRecord) {
                 return currentSavedAlimRecord;
             }
@@ -1725,9 +1876,9 @@
 🚛 *Sevk:* ${alim.tuccar} (${alim.parti})
 ━━━━━━━━━━━━━━━━━━━━
 🍅 *Ürün:* ${alim.urun}
-📦 *Kasa:* ${alim.kasa_adet} Adet (${alim.total_dara} Kg Dara)
-⚖️ *Brüt Kilo:* ${alim.brut} Kg
-✅ *NET KİLO:* *${alim.net} Kg*
+📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Dara)
+⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg
+✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*
 ━━━━━━━━━━━━━━━━━━━━
 _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
 
@@ -1759,7 +1910,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                 return `
                     <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
                         <div>
-                            <div class="font-extrabold text-slate-900">#${a.id} • ${escapeHtml(a.mustahsil)} <span class="text-emerald-700">(${escapeHtml(a.urun)} - ${a.net} Kg)</span></div>
+                            <div class="font-extrabold text-slate-900">#${a.id} • ${escapeHtml(a.mustahsil)} <span class="text-emerald-700">(${escapeHtml(a.urun)} - ${formatDecimal(a.net)} Kg)</span></div>
                             <div class="text-[11px] text-slate-500 mt-0.5">${escapeHtml(a.tarih)} • ${escapeHtml(a.tuccar)} (${escapeHtml(a.parti)})</div>
                             <div class="mt-1">${waBadge}</div>
                         </div>
@@ -1809,7 +1960,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                         <td class="p-2.5 text-[11px]">${escapeHtml(item.tarih)}</td>
                         <td class="p-2.5 font-medium">${escapeHtml(item.mustahsil)}</td>
                         <td class="p-2.5 font-semibold text-slate-700">${escapeHtml(item.urun)}</td>
-                        <td class="p-2.5 font-bold text-emerald-700 text-right">${net} Kg</td>
+                        <td class="p-2.5 font-bold text-emerald-700 text-right">${formatDecimal(net)} Kg</td>
                         <td class="p-2.5">
                             <input type="number" inputmode="decimal" step="0.1" value="${fiyat || ''}" placeholder="0 TL" onchange="updateRowPrice(${item.id}, 'tuccar_fiyat', this.value)" class="w-24 border p-1.5 text-xs rounded-lg font-bold text-amber-900 bg-amber-50 outline-none">
                         </td>
@@ -1826,7 +1977,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
                 `;
             });
 
-            document.getElementById('mektup-sum-kilo').innerText = sumKilo.toFixed(1) + ' Kg';
+            document.getElementById('mektup-sum-kilo').innerText = formatDecimal(sumKilo) + ' Kg';
             document.getElementById('mektup-sum-tuccar').innerText = sumTuccar.toLocaleString('tr-TR') + ' TL';
         }
 
@@ -1834,7 +1985,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
         async function removeAlimFromParti(alimId) {
             const item = state.alimlar.find(a => a.id === alimId);
             if (!item) return;
-            if (!confirm(`"${item.mustahsil} - ${item.urun} (${item.net} Kg)" kalemini bu partiden çıkartmak (kaydı silmek) istediğinize emin misiniz?`)) return;
+            if (!confirm(`"${item.mustahsil} - ${item.urun} (${formatDecimal(item.net)} Kg)" kalemini bu partiden çıkartmak (kaydı silmek) istediğinize emin misiniz?`)) return;
 
             const { error } = await db.from('alimlar').delete().eq('id', alimId);
             if (error) { alert('Çıkartma hatası: ' + error.message); return; }
@@ -1855,7 +2006,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             if (!item) return;
             transferringAlimId = alimId;
 
-            document.getElementById('transfer-alim-info').innerText = `${item.mustahsil} • ${item.urun} (${item.net} Kg) — Şu an: ${item.tuccar}`;
+            document.getElementById('transfer-alim-info').innerText = `${item.mustahsil} • ${item.urun} (${formatDecimal(item.net)} Kg) — Şu an: ${item.tuccar}`;
             const sel = document.getElementById('transfer-target-tuccar');
             sel.innerHTML = '<option value="">Hedef Tüccar Seçiniz...</option>';
             state.tuccarlar.forEach(t => {
@@ -1914,7 +2065,7 @@ _Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
             if(item) { item[key] = numVal; renderMektupTable(); renderKarZarar(); }
         }
 
-        // ADIM 1: Önce sadece önizleme aç (Partiyi henüz kapatma! Kapat'a basarsa partiye devam edebilsin)
+        // ADIM 1: Önce sadece önizleme aç
         function openMektupPreviewBeforeFinalize() {
             const selectedTuccar = document.getElementById('mektup-tuccar-select').value;
             if(!selectedTuccar) { alert('Lütfen Tüccar seçiniz!'); return; }
@@ -2206,7 +2357,7 @@ _Hayırlı işler dileriz._`;
                     <tr>
                         <td class="p-2.5 font-bold text-slate-800">${escapeHtml(it.mustahsil)}</td>
                         <td class="p-2.5 font-medium text-slate-700">${escapeHtml(it.urun)}</td>
-                        <td class="p-2.5 text-right font-bold text-slate-700">${net} Kg</td>
+                        <td class="p-2.5 text-right font-bold text-slate-700">${formatDecimal(net)} Kg</td>
                         <td class="p-2.5">
                             <input type="number" inputmode="decimal" step="0.1" value="${fiyat}" oninput="recalcEditedMektup(${idx}, this.value)" class="w-28 bg-amber-50 border border-amber-300 rounded-lg p-1.5 text-xs font-extrabold text-amber-900 outline-none">
                         </td>
@@ -2289,21 +2440,18 @@ _Hayırlı işler dileriz._`;
             const onay = confirm(`DİKKAT!\n\n"${m.tuccar} - ${m.parti}" (${parseFloat(m.toplam_tutar).toLocaleString('tr-TR')} TL) partisini silmek istediğinize emin misiniz?\n\nBu işlem geri alınamaz; partiye ait mal alım kayıtları ve tüccar bakiyesi de silinecektir.`);
             if (!onay) return;
 
-            // Bağlı mal alımlarını veritabanından sil
             const { error: aErr } = await db.from('alimlar').delete().eq('mektup_id', id);
             if (aErr) {
                 alert('Partiye bağlı alımlar silinirken hata oluştu: ' + aErr.message);
                 return;
             }
 
-            // Mektup kaydını sil
             const { error: mErr } = await db.from('kesilen_mektuplar').delete().eq('id', id);
             if (mErr) {
                 alert('Parti silinirken hata oluştu: ' + mErr.message);
                 return;
             }
 
-            // Yerel state'i temizle
             const itemIds = new Set((m.items || []).map(i => i.id));
             state.alimlar = state.alimlar.filter(a => a.mektup_id !== id && !itemIds.has(a.id));
             state.kesilenMektuplar = state.kesilenMektuplar.filter(x => x.id !== id);
@@ -2365,7 +2513,7 @@ _Hayırlı işler dileriz._`;
                     <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
                         <div>
                             <strong class="text-slate-800 text-sm">${escapeHtml(m.parti)}</strong>
-                            <span class="text-slate-500 block text-[11px]">${escapeHtml(m.tarih)} • ${m.toplam_kilo} Kg</span>
+                            <span class="text-slate-500 block text-[11px]">${escapeHtml(m.tarih)} • ${formatDecimal(m.toplam_kilo)} Kg</span>
                             ${waStatusBadge}
                         </div>
                         <div class="text-left sm:text-right w-full sm:w-auto">
@@ -2391,8 +2539,9 @@ _Hayırlı işler dileriz._`;
                     <tr>
                         <td class="p-2.5 text-[11px]">${escapeHtml(m.tarih)}</td>
                         <td class="p-2.5"><span class="bg-blue-100 text-blue-800 text-[10px] px-1.5 py-0.5 rounded font-bold">MEKTUP</span></td>
-                        <td class="p-2.5 text-[11px]">${escapeHtml(m.parti)} (${m.toplam_kilo} Kg)</td>
+                        <td class="p-2.5 text-[11px]">${escapeHtml(m.parti)} (${formatDecimal(m.toplam_kilo)} Kg)</td>
                         <td class="p-2.5 text-right font-bold text-blue-900">${parseFloat(m.toplam_tutar).toLocaleString('tr-TR')} TL</td>
+                        <td class="p-2.5 text-center text-[10px] text-slate-400">-</td>
                     </tr>
                 `;
             });
@@ -2410,6 +2559,14 @@ _Hayırlı işler dileriz._`;
                         <td class="p-2.5">${badgeHtml}</td>
                         <td class="p-2.5 text-[11px]">${escapeHtml(o.aciklama)}${vadeText}</td>
                         <td class="p-2.5 text-right font-bold text-emerald-700">-${parseFloat(o.tutar).toLocaleString('tr-TR')} TL</td>
+                        <td class="p-2.5 text-center whitespace-nowrap space-x-1">
+                            <button onclick="openEditOdemeModal('tuccar', ${o.id})" title="Düzenle" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2 py-1 rounded-lg text-[11px] transition">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteOdemeRecord('tuccar', ${o.id})" title="Sil" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px] transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
             });
@@ -2518,7 +2675,7 @@ _Hayırlı işler dileriz._`;
                     <tr>
                         <td class="p-2.5 text-[11px]">${escapeHtml(a.tarih)}${waBadge}</td>
                         <td class="p-2.5 text-[11px]"><strong class="text-slate-800">${escapeHtml(a.urun)}</strong><span class="text-slate-500 block text-[10px]">${escapeHtml(a.tuccar)} (${escapeHtml(a.parti)})</span></td>
-                        <td class="p-2.5 text-right font-bold text-slate-700">${net} Kg</td>
+                        <td class="p-2.5 text-right font-bold text-slate-700">${formatDecimal(net)} Kg</td>
                         <td class="p-2.5"><input type="number" inputmode="decimal" step="0.1" value="${fiyat || ''}" placeholder="0 TL" onchange="updateMustahsilPrice(${a.id}, this.value)" class="w-20 border p-1 text-xs rounded font-bold text-purple-900 bg-purple-50 outline-none"></td>
                         <td class="p-2.5 text-right font-bold text-purple-900">${(net * fiyat).toLocaleString('tr-TR')} TL</td>
                         <td class="p-2.5 text-center">
@@ -2536,6 +2693,14 @@ _Hayırlı işler dileriz._`;
                         <td class="p-2.5 text-[11px]">${escapeHtml(o.tarih)}</td>
                         <td class="p-2.5 text-[11px] font-bold text-emerald-800">${escapeHtml(o.aciklama)}</td>
                         <td class="p-2.5 text-right font-bold text-emerald-700">${parseFloat(o.tutar).toLocaleString('tr-TR')} TL</td>
+                        <td class="p-2.5 text-center whitespace-nowrap space-x-1">
+                            <button onclick="openEditOdemeModal('mustahsil', ${o.id})" title="Düzenle" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2 py-1 rounded-lg text-[11px] transition">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button onclick="deleteOdemeRecord('mustahsil', ${o.id})" title="Sil" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold px-2 py-1 rounded-lg text-[11px] transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                 `;
             });
@@ -2570,6 +2735,123 @@ _Hayırlı işler dileriz._`;
             document.getElementById('mustahsil-odeme-tutar').value = '';
             document.getElementById('mustahsil-odeme-aciklama').value = '';
             alert('Müstahsil Ödemesi / Avansı kaydedildi!');
+        }
+
+        // ================= CARİ ÖDEME / TAHSİLAT DÜZENLEME & SİLME =================
+        function openEditOdemeModal(type, id) {
+            const isTuccar = type === 'tuccar';
+            const rec = isTuccar
+                ? state.tuccarOdemeler.find(o => o.id === id)
+                : state.mustahsilOdemeler.find(o => o.id === id);
+            if (!rec) return;
+
+            document.getElementById('edit-odeme-type').value = type;
+            document.getElementById('edit-odeme-id').value = id;
+            document.getElementById('edit-odeme-tutar').value = rec.tutar;
+            document.getElementById('edit-odeme-aciklama').value = rec.aciklama || '';
+
+            if (isTuccar) {
+                document.getElementById('odeme-edit-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-blue-600"></i> Tüccar Tahsilatını Düzenle';
+                document.getElementById('odeme-edit-subtitle').innerText = `${rec.tuccar} • ${rec.tarih} (${rec.odeme_turu || 'Tahsilat'})`;
+                const vadeBox = document.getElementById('edit-odeme-vade-box');
+                if (rec.odeme_turu === 'Vadeli') {
+                    vadeBox.classList.remove('hidden');
+                    document.getElementById('edit-odeme-vade').value = rec.vade_tarihi || '';
+                } else {
+                    vadeBox.classList.add('hidden');
+                    document.getElementById('edit-odeme-vade').value = '';
+                }
+            } else {
+                document.getElementById('odeme-edit-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-purple-600"></i> Müstahsil Ödemesini Düzenle';
+                document.getElementById('odeme-edit-subtitle').innerText = `${rec.mustahsil} • ${rec.tarih}`;
+                document.getElementById('edit-odeme-vade-box').classList.add('hidden');
+                document.getElementById('edit-odeme-vade').value = '';
+            }
+
+            document.getElementById('odeme-edit-modal').classList.remove('hidden');
+        }
+
+        function closeOdemeEditModal() {
+            document.getElementById('odeme-edit-modal').classList.add('hidden');
+        }
+
+        async function saveEditedOdeme(e) {
+            e.preventDefault();
+            const type = document.getElementById('edit-odeme-type').value;
+            const id = parseInt(document.getElementById('edit-odeme-id').value, 10);
+            const yeniTutar = parseFloat(document.getElementById('edit-odeme-tutar').value);
+            const yeniAciklama = document.getElementById('edit-odeme-aciklama').value.trim();
+            const yeniVade = document.getElementById('edit-odeme-vade').value;
+
+            if (isNaN(yeniTutar) || yeniTutar <= 0) {
+                alert('Lütfen geçerli bir tutar giriniz.');
+                return;
+            }
+
+            const btn = document.getElementById('btn-save-edited-odeme');
+            btn.disabled = true;
+            btn.innerText = 'Kaydediliyor...';
+
+            if (type === 'tuccar') {
+                const rec = state.tuccarOdemeler.find(o => o.id === id);
+                const updateFields = {
+                    tutar: yeniTutar,
+                    aciklama: yeniAciklama || (rec?.odeme_turu === 'Vadeli' ? 'Vadeli Müşteri Çeki' : (rec?.odeme_turu || 'Tahsilat'))
+                };
+                if (rec && rec.odeme_turu === 'Vadeli' && yeniVade) {
+                    updateFields.vade_tarihi = yeniVade;
+                }
+
+                const { error } = await db.from('tuccar_odemeler').update(updateFields).eq('id', id);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet';
+
+                if (error) { alert('Güncelleme hatası: ' + error.message); return; }
+                if (rec) Object.assign(rec, updateFields);
+                closeOdemeEditModal();
+                renderTuccarCariDetails();
+                renderKarZarar();
+            } else {
+                const updateFields = {
+                    tutar: yeniTutar,
+                    aciklama: yeniAciklama || 'Elden / Nakit Ödeme'
+                };
+                const { error } = await db.from('mustahsil_odemeler').update(updateFields).eq('id', id);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Kaydet';
+
+                if (error) { alert('Güncelleme hatası: ' + error.message); return; }
+                const rec = state.mustahsilOdemeler.find(o => o.id === id);
+                if (rec) Object.assign(rec, updateFields);
+                closeOdemeEditModal();
+                renderMustahsilCariDetails();
+                renderKarZarar();
+            }
+        }
+
+        async function deleteOdemeRecord(type, id) {
+            const isTuccar = type === 'tuccar';
+            const rec = isTuccar
+                ? state.tuccarOdemeler.find(o => o.id === id)
+                : state.mustahsilOdemeler.find(o => o.id === id);
+            if (!rec) return;
+
+            const kisi = isTuccar ? rec.tuccar : rec.mustahsil;
+            const onay = confirm(`"${kisi}" için ${parseFloat(rec.tutar).toLocaleString('tr-TR')} TL tutarındaki ödeme/tahsilat kaydını silmek istediğinize emin misiniz?`);
+            if (!onay) return;
+
+            const table = isTuccar ? 'tuccar_odemeler' : 'mustahsil_odemeler';
+            const { error } = await db.from(table).delete().eq('id', id);
+            if (error) { alert('Silme hatası: ' + error.message); return; }
+
+            if (isTuccar) {
+                state.tuccarOdemeler = state.tuccarOdemeler.filter(o => o.id !== id);
+                renderTuccarCariDetails();
+            } else {
+                state.mustahsilOdemeler = state.mustahsilOdemeler.filter(o => o.id !== id);
+                renderMustahsilCariDetails();
+            }
+            renderKarZarar();
         }
 
         // ================= KÂR / ZARAR, GENEL BAKİYELER & VADELİ ÇEKLER =================
@@ -2751,8 +3033,16 @@ _Hayırlı işler dileriz._`;
                     const { error } = await db.from(table).update({ name: newName.trim() }).eq('id', id);
                     if(!error) item.name = newName.trim();
                 }
+            } else if(table === 'kasalar') {
+                const newName = prompt('Kasa Adı:', item.name);
+                const newDaraStr = prompt('Kasa Darası (Kg, Örn: 0.35):', formatDecimal(item.dara));
+                const newDara = parseFloat(newDaraStr);
+                if(newName && !isNaN(newDara)) {
+                    const { error } = await db.from('kasalar').update({ name: newName.trim(), dara: newDara }).eq('id', id);
+                    if(!error) { item.name = newName.trim(); item.dara = newDara; }
+                }
             }
-            populateSelects(); renderTanimListeleri();
+            populateSelects(); renderTanimListeleri(); calculateNetKilo();
         }
 
         function renderTanimListeleri() {
@@ -2771,7 +3061,7 @@ _Hayırlı işler dileriz._`;
             }).join('');
 
             document.getElementById('list-kasa').innerHTML = state.kasalar.map(k => 
-                `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(k.name)} (${k.dara} Kg)</span><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></li>`
+                `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(k.name)} (${formatDecimal(k.dara)} Kg)</span><span><button onclick="editTanim('kasalar', ${k.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`
             ).join('');
         }
     </script>
