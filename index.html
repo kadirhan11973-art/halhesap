@@ -378,7 +378,7 @@
                                             <input type="number" inputmode="numeric" id="alim-kasa-adet" min="1" value="10" oninput="markAlimFormDirty(); calculateNetKilo();" required class="w-full bg-white border border-slate-300 rounded-lg p-2.5 text-sm font-bold text-center focus:ring-2 focus:ring-emerald-500 outline-none">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-slate-600 mb-1">Toplam Dara (Kg)</label>
+                                            <label class="block text-xs font-bold text-slate-600 mb-1">Müstahsil Derzi (Kg)</label>
                                             <input type="number" id="alim-toplam-dara" readonly class="w-full bg-slate-200 text-slate-700 font-bold text-center border border-slate-300 rounded-lg p-2.5 text-sm" value="0">
                                         </div>
                                     </div>
@@ -390,7 +390,7 @@
                                         <input type="number" inputmode="decimal" id="alim-brut-kilo" step="0.01" value="250" oninput="markAlimFormDirty(); calculateNetKilo();" required class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-base font-extrabold focus:ring-2 focus:ring-emerald-500 outline-none" placeholder="0.0">
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-bold text-emerald-700 mb-1">Net Kilo (Dara Düşük)</label>
+                                        <label class="block text-xs font-bold text-emerald-700 mb-1">Net Kilo (Derz Düşük)</label>
                                         <input type="number" id="alim-net-kilo" readonly class="w-full bg-emerald-50 text-emerald-800 text-lg sm:text-xl font-black border border-emerald-300 rounded-xl p-2.5 text-center" value="0">
                                     </div>
                                 </div>
@@ -442,7 +442,7 @@
                                 <tbody>
                                     <tr>
                                         <td id="rec-urun" class="py-1.5 font-bold">---</td>
-                                        <td id="rec-kasa-detay" class="py-1.5 text-center font-semibold">10 Ad (20 Kg Dara)</td>
+                                        <td id="rec-kasa-detay" class="py-1.5 text-center font-semibold">10 Ad (20 Kg Derz)</td>
                                         <td id="rec-net-kilo" class="py-1.5 text-right font-extrabold">0 Kg</td>
                                     </tr>
                                 </tbody>
@@ -450,7 +450,7 @@
 
                             <div class="border-t border-dashed border-slate-400 pt-2.5 rec-sub space-y-1.5">
                                 <div class="flex justify-between"><span>Brüt Kilo:</span> <span id="rec-brut" class="font-bold">0 Kg</span></div>
-                                <div class="flex justify-between"><span>Toplam Dara:</span> <span id="rec-dara" class="font-bold">0 Kg</span></div>
+                                <div class="flex justify-between"><span>Kasa Derzi:</span> <span id="rec-dara" class="font-bold">0 Kg</span></div>
                                 <div class="flex justify-between rec-net-big pt-1.5 border-t border-slate-300"><span>NET KİLO:</span> <span id="rec-net-total">0 Kg</span></div>
                             </div>
 
@@ -486,7 +486,7 @@
                             <h2 class="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-envelope-open-text text-amber-600"></i> Parti Yönetimi & Mektup Fiyatlandırma
                             </h2>
-                            <p class="text-xs text-slate-500">Kamyonda toplanan malların Tüccar satış fiyatını girin; yanlış malı başka tüccara aktarabilir veya partiden çıkartabilirsiniz.</p>
+                            <p class="text-xs text-slate-500">Tüccar mektubunda tüccar derzi uygulanır; aradaki kilo farkı doğal olarak mektuba yansır.</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 w-full sm:w-auto">
@@ -504,7 +504,7 @@
                                     <th class="p-2.5">Tarih</th>
                                     <th class="p-2.5">Müstahsil</th>
                                     <th class="p-2.5">Ürün</th>
-                                    <th class="p-2.5 text-right">Net Kilo</th>
+                                    <th class="p-2.5 text-right">Mektup Net Kilo</th>
                                     <th class="p-2.5 w-32">Tüccar Satış (TL)</th>
                                     <th class="p-2.5 text-right">Tutar</th>
                                     <th class="p-2.5 text-center">İşlem (Aktar / Çıkar)</th>
@@ -518,7 +518,7 @@
                         <div class="text-center sm:text-left">
                             <div class="text-[11px] font-bold text-amber-800 uppercase">Seçili Parti Mektup Özeti</div>
                             <div class="text-xs sm:text-sm text-amber-900 mt-0.5">
-                                Toplam Net Kilo: <strong id="mektup-sum-kilo">0 Kg</strong> | 
+                                Toplam Mektup Net Kilo: <strong id="mektup-sum-kilo">0 Kg</strong> | 
                                 Mektup Tutar: <strong id="mektup-sum-tuccar" class="text-emerald-700 text-base">0 TL</strong>
                             </div>
                         </div>
@@ -727,7 +727,7 @@
                         <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
                             <span class="text-[11px] font-bold text-emerald-700 uppercase">Toplam Brüt Hal Kârı</span>
                             <div id="summary-net-kar" class="text-2xl sm:text-3xl font-black text-emerald-800 mt-1">0 TL</div>
-                            <span class="text-[10px] text-emerald-600">Ciro - Maliyet net ticari fark</span>
+                            <span class="text-[10px] text-emerald-600">Ciro - Maliyet (Derz farkı dahil)</span>
                         </div>
                     </div>
                 </div>
@@ -858,10 +858,13 @@
                     </div>
 
                     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
-                        <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-box text-amber-600 mr-1"></i> Kasa Daraları</h3>
+                        <h3 class="font-bold text-slate-800 text-sm mb-3"><i class="fa-solid fa-box text-amber-600 mr-1"></i> Kasa Derzleri</h3>
                         <form onsubmit="handleAddKasa(event)" class="space-y-2 mb-3">
-                            <input type="text" id="def-kasa-name" placeholder="Kasa Adı" required class="w-full border p-2 text-xs rounded-lg outline-none">
-                            <input type="number" inputmode="decimal" step="0.01" id="def-kasa-dara" placeholder="Dara (Kg, Örn: 0.35)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                            <input type="text" id="def-kasa-name" placeholder="Kasa Adı (Örn: Sepet Kasa)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <input type="number" inputmode="decimal" step="0.01" id="def-kasa-mustahsil-derz" placeholder="Müstahsil Derz (2)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                                <input type="number" inputmode="decimal" step="0.01" id="def-kasa-tuccar-derz" placeholder="Tüccar Derz (1.5)" required class="w-full border p-2 text-xs rounded-lg outline-none">
+                            </div>
                             <button type="submit" class="w-full bg-slate-800 text-white font-bold py-1.5 rounded-lg text-xs">Ekle</button>
                         </form>
                         <ul id="list-kasa" class="divide-y text-xs max-h-40 overflow-y-auto"></ul>
@@ -1004,7 +1007,7 @@
     <script>
         const SUPABASE_URL = 'https://zyknxulieisyavzfcekd.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5a254dWxpZWlzeWF2emZjZWtkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwMjEzMDAsImV4cCI6MjExMDU5NzMwMH0.EIN4KPQcCcJBBxdWL4xnErxsSpk77mGzlCuTPeOhMWk';
-        const RETENTION_DAYS = 30; // Veritabanını şişirmemek için silinmiş kayıtların saklanma süresi (gün)
+        const RETENTION_DAYS = 30;
 
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             auth: {
@@ -1054,6 +1057,54 @@
             return parseFloat(rounded.toFixed(maxDecimals)).toString();
         }
 
+        function getMustahsilDerzBirim(kasaObj) {
+            if (!kasaObj) return 0;
+            if (kasaObj.mustahsil_derzi !== undefined && kasaObj.mustahsil_derzi !== null && kasaObj.mustahsil_derzi !== '') {
+                return parseFloat(kasaObj.mustahsil_derzi) || 0;
+            }
+            return parseFloat(kasaObj.dara) || 0;
+        }
+
+        function getTuccarDerzBirim(kasaObj) {
+            if (!kasaObj) return getMustahsilDerzBirim(kasaObj);
+            if (kasaObj.tuccar_derzi !== undefined && kasaObj.tuccar_derzi !== null && kasaObj.tuccar_derzi !== '') {
+                return parseFloat(kasaObj.tuccar_derzi) || 0;
+            }
+            return getMustahsilDerzBirim(kasaObj);
+        }
+
+        // Mektup kaleminin tüccar derzi düşülmüş net kilosunu döndürür
+        function getMektupItemNetKilo(item) {
+            const adet = parseFloat(item.kasa_adet) || 0;
+            const brut = parseFloat(item.brut);
+            const mDerz = parseFloat(item.mustahsil_derzi);
+            const mDara = parseFloat(item.total_dara) || 0;
+            const net = parseFloat(item.net) || 0;
+
+            let tDerzBirim = (item.tuccar_derzi !== undefined && item.tuccar_derzi !== null && item.tuccar_derzi !== '')
+                ? (parseFloat(item.tuccar_derzi) || 0)
+                : null;
+
+            if (tDerzBirim === null && item.kasa_name) {
+                const kObj = state.kasalar.find(k => k.name === item.kasa_name);
+                if (kObj) tDerzBirim = getTuccarDerzBirim(kObj);
+            }
+
+            const baseBrut = !isNaN(brut) && brut > 0 ? brut : (net + mDara);
+            if (tDerzBirim !== null && adet > 0 && baseBrut > 0) {
+                const tDara = Math.round((tDerzBirim * adet) * 100) / 100;
+                return Math.max(0, Math.round((baseBrut - tDara) * 100) / 100);
+            }
+            if (item.tuccar_net !== undefined && item.tuccar_net !== null) {
+                return parseFloat(item.tuccar_net) || 0;
+            }
+            if (tDerzBirim !== null && !isNaN(mDerz) && adet > 0) {
+                const fark = (mDerz - tDerzBirim) * adet;
+                return Math.max(0, Math.round((net + fark) * 100) / 100);
+            }
+            return net;
+        }
+
         function slugifyUsername(text) {
             if (!text) return '';
             return text.trim().toLowerCase()
@@ -1066,7 +1117,6 @@
             return !row || row.deleted_at === null || row.deleted_at === undefined;
         }
 
-        // Veritabanının kabarmaması için RETENTION_DAYS günden eski silinmiş kayıtları temizle
         async function purgeOldSoftDeletedRecords() {
             if (!currentUser) return;
             const cutoff = new Date(Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
@@ -1078,7 +1128,6 @@
             }));
         }
 
-        // Yumuşak silme (deleted_at kolonuna ISO tarih yazar; kolon yoksa fallback hard delete yapar)
         async function softDeleteByIds(table, ids) {
             if (!ids || ids.length === 0) return { error: null };
             const nowIso = new Date().toISOString();
@@ -1385,7 +1434,7 @@
             alert('WhatsApp numarası güncellendi!');
         }
 
-        // VERİ SENKRONİZASYONU (Sadece silinmemiş aktif kayıtlar alınır)
+        // VERİ SENKRONİZASYONU
         async function syncAllData() {
             if (!currentUser) return;
             try {
@@ -1500,7 +1549,10 @@
             if (kasaSelect) {
                 const val = kasaSelect.value;
                 kasaSelect.innerHTML = '<option value="">Kasa Seç...</option>';
-                state.kasalar.forEach(k => kasaSelect.innerHTML += `<option value="${k.id}">${escapeHtml(k.name)} (${formatDecimal(k.dara)} Kg)</option>`);
+                state.kasalar.forEach(k => {
+                    const mDerz = getMustahsilDerzBirim(k);
+                    kasaSelect.innerHTML += `<option value="${k.id}">${escapeHtml(k.name)} (${formatDecimal(mDerz)} Kg)</option>`;
+                });
                 kasaSelect.value = state.kasalar.some(k => String(k.id) === String(val)) ? val : (state.kasalar[0]?.id || '');
             }
         }
@@ -1510,7 +1562,6 @@
             return found ? Math.max(1, parseInt(found.aktif_parti, 10) || 1) : 1;
         }
 
-        // Kalan kesilmiş partilere / alımlara göre en sonki doğru parti numarasını hesaplar
         function computeRestoredPartiNo(tuccarName, uid) {
             let maxParti = 0;
             state.kesilenMektuplar.forEach(m => {
@@ -1535,16 +1586,17 @@
             display.value = `${getAktifPartiNo(tuccar)}. Parti (Aktif)`;
         }
 
+        // Mal alım fişinde sadece MÜSTAHSİL DERZİ uygulanır ve fişte görünür
         function calculateNetKilo() {
             const kasaId = document.getElementById('alim-kasa').value;
             const adet = parseFloat(document.getElementById('alim-kasa-adet').value) || 0;
             const brut = parseFloat(document.getElementById('alim-brut-kilo').value) || 0;
 
-            let singleDara = 0;
+            let mustahsilDerzBirim = 0;
             const kasaObj = state.kasalar.find(k => String(k.id) === String(kasaId));
-            if (kasaObj) singleDara = parseFloat(kasaObj.dara) || 0;
+            if (kasaObj) mustahsilDerzBirim = getMustahsilDerzBirim(kasaObj);
 
-            const totalDara = Math.round((singleDara * adet) * 100) / 100;
+            const totalDara = Math.round((mustahsilDerzBirim * adet) * 100) / 100;
             const net = Math.max(0, Math.round((brut - totalDara) * 100) / 100);
 
             document.getElementById('alim-toplam-dara').value = formatDecimal(totalDara);
@@ -1556,7 +1608,7 @@
             document.getElementById('rec-parti').innerText = document.getElementById('alim-parti-display').value || '---';
             document.getElementById('rec-mustahsil').innerText = document.getElementById('alim-mustahsil').value || '---';
             document.getElementById('rec-urun').innerText = document.getElementById('alim-urun').value || '---';
-            document.getElementById('rec-kasa-detay').innerText = `${adet} Ad (${formatDecimal(totalDara)} Kg Dara)`;
+            document.getElementById('rec-kasa-detay').innerText = `${adet} Ad (${formatDecimal(totalDara)} Kg Derz)`;
             document.getElementById('rec-brut').innerText = formatDecimal(brut) + ' Kg';
             document.getElementById('rec-dara').innerText = formatDecimal(totalDara) + ' Kg';
             document.getElementById('rec-net-kilo').innerText = formatDecimal(net) + ' Kg';
@@ -1632,10 +1684,10 @@
             const mustahsil = document.getElementById('alim-mustahsil').value;
             const urun = document.getElementById('alim-urun').value;
             const kasaId = document.getElementById('alim-kasa').value;
-            const kasaAdet = parseFloat(document.getElementById('alim-kasa-adet').value);
+            const kasaAdet = parseFloat(document.getElementById('alim-kasa-adet').value) || 0;
             const brut = parseFloat(document.getElementById('alim-brut-kilo').value);
-            const totalDara = parseFloat(document.getElementById('alim-toplam-dara').value);
-            const net = parseFloat(document.getElementById('alim-net-kilo').value);
+            const totalDara = parseFloat(document.getElementById('alim-toplam-dara').value) || 0;
+            const net = parseFloat(document.getElementById('alim-net-kilo').value) || 0;
 
             if (!tuccar || !mustahsil || !urun) { alert('Lütfen tüm seçimleri yapınız!'); return null; }
             if (isNaN(brut) || brut <= 0) { alert('Geçerli brüt kilo giriniz!'); return null; }
@@ -1644,13 +1696,26 @@
             try {
                 const partiStr = `${getAktifPartiNo(tuccar)}. Parti`;
                 const kasaObj = state.kasalar.find(k => String(k.id) === String(kasaId));
+                const mDerzBirim = getMustahsilDerzBirim(kasaObj);
+                const tDerzBirim = getTuccarDerzBirim(kasaObj);
+                const tuccarDara = Math.round((tDerzBirim * kasaAdet) * 100) / 100;
+                const tuccarNet = Math.max(0, Math.round((brut - tuccarDara) * 100) / 100);
+
                 const newAlim = {
                     user_id: session.user.id,
                     tarih: new Date().toLocaleString('tr-TR'),
                     tuccar, parti: partiStr, mustahsil, urun,
                     kasa_name: kasaObj?.name || '',
-                    kasa_adet: kasaAdet, total_dara: totalDara,
-                    brut, net, mustahsil_fiyat: 0, tuccar_fiyat: 0, mektup_kesildi: false,
+                    kasa_adet: kasaAdet,
+                    dara: mDerzBirim,
+                    mustahsil_derzi: mDerzBirim,
+                    tuccar_derzi: tDerzBirim,
+                    total_dara: totalDara,
+                    tuccar_dara: tuccarDara,
+                    brut,
+                    net,
+                    tuccar_net: tuccarNet,
+                    mustahsil_fiyat: 0, tuccar_fiyat: 0, mektup_kesildi: false,
                     whatsapp_gonderildi: false
                 };
 
@@ -1714,7 +1779,7 @@
             const waPhone = formatPhoneForWhatsApp(phone);
             const firmaAdi = state.firma.firma_adi || 'HAL HESAP';
             const firmaTel = state.firma.telefon ? `\n📞 ${state.firma.telefon}` : '';
-            const msg = `*${firmaAdi}* - MAL ALIM FİŞİ${firmaTel}\n━━━━━━━━━━━━━━━━━━━━\n🧾 *Fiş No:* #${alim.id}\n📅 *Tarih:* ${alim.tarih}\n👨‍🌾 *Müstahsil:* ${alim.mustahsil}\n🚛 *Sevk:* ${alim.tuccar} (${alim.parti})\n━━━━━━━━━━━━━━━━━━━━\n🍅 *Ürün:* ${alim.urun}\n📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Dara)\n⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg\n✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*\n━━━━━━━━━━━━━━━━━━━━\n_Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
+            const msg = `*${firmaAdi}* - MAL ALIM FİŞİ${firmaTel}\n━━━━━━━━━━━━━━━━━━━━\n🧾 *Fiş No:* #${alim.id}\n📅 *Tarih:* ${alim.tarih}\n👨‍🌾 *Müstahsil:* ${alim.mustahsil}\n🚛 *Sevk:* ${alim.tuccar} (${alim.parti})\n━━━━━━━━━━━━━━━━━━━━\n🍅 *Ürün:* ${alim.urun}\n📦 *Kasa:* ${alim.kasa_adet} Adet (${formatDecimal(alim.total_dara)} Kg Derz)\n⚖️ *Brüt Kilo:* ${formatDecimal(alim.brut)} Kg\n✅ *NET KİLO:* *${formatDecimal(alim.net)} Kg*\n━━━━━━━━━━━━━━━━━━━━\n_Söz uçar yazı kalır - Hal Kayıt Belgesidir._`;
 
             const gonderimTarihi = new Date().toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
             await db.from('alimlar').update({ whatsapp_gonderildi: true, whatsapp_tarih: gonderimTarihi }).eq('id', alim.id);
@@ -1753,7 +1818,7 @@
             }).join('');
         }
 
-        // PARTİ & MEKTUP
+        // PARTİ & MEKTUP (Tüccar derzi düşülmüş net kilo üzerinden hesaplanır)
         function renderMektupTable() {
             const selectedTuccar = document.getElementById('mektup-tuccar-select').value;
             const partiDisplay = document.getElementById('mektup-parti-display');
@@ -1780,7 +1845,7 @@
             }
 
             filtered.forEach(item => {
-                const net = parseFloat(item.net) || 0;
+                const net = getMektupItemNetKilo(item);
                 const fiyat = parseFloat(item.tuccar_fiyat) || 0;
                 sumKilo += net;
                 const tTut = net * fiyat;
@@ -1879,13 +1944,16 @@
             if (!selectedTuccar) { alert('Lütfen Tüccar seçiniz!'); return; }
             const currentPartiNo = getAktifPartiNo(selectedTuccar);
             const partiStr = `${currentPartiNo}. Parti`;
-            const items = state.alimlar.filter(a => a.tuccar === selectedTuccar && a.parti === partiStr && !a.mektup_kesildi);
-            if (items.length === 0) { alert('Bu partide kesilecek mal alımı bulunamadı!'); return; }
+            const rawItems = state.alimlar.filter(a => a.tuccar === selectedTuccar && a.parti === partiStr && !a.mektup_kesildi);
+            if (rawItems.length === 0) { alert('Bu partide kesilecek mal alımı bulunamadı!'); return; }
 
             let toplamKilo = 0, toplamTutar = 0;
-            items.forEach(a => {
-                toplamKilo += parseFloat(a.net) || 0;
-                toplamTutar += ((parseFloat(a.net) || 0) * (parseFloat(a.tuccar_fiyat) || 0));
+            const items = rawItems.map(a => {
+                const mektupNet = getMektupItemNetKilo(a);
+                const fiyat = parseFloat(a.tuccar_fiyat) || 0;
+                toplamKilo += mektupNet;
+                toplamTutar += (mektupNet * fiyat);
+                return { ...a, mektup_net: mektupNet };
             });
 
             const tarihStr = new Date().toLocaleString('tr-TR');
@@ -1912,7 +1980,10 @@
             const nextParti = draft.partiNo + 1;
             await db.from('tuccarlar').update({ aktif_parti: nextParti }).eq('name', draft.tuccar).eq('user_id', uid);
 
-            draft.items.forEach(a => { a.mektup_kesildi = true; a.mektup_id = newMektup.id; });
+            draft.items.forEach(a => {
+                const localA = state.alimlar.find(x => x.id === a.id);
+                if (localA) { localA.mektup_kesildi = true; localA.mektup_id = newMektup.id; }
+            });
             state.kesilenMektuplar.unshift(newMektup);
             const tObj = state.tuccarlar.find(t => t.name === draft.tuccar);
             if (tObj) tObj.aktif_parti = nextParti;
@@ -1942,7 +2013,7 @@
 
             let rowsHtml = '', toplamKasa = 0;
             items.forEach((it, index) => {
-                const net = parseFloat(it.net) || 0;
+                const net = it.mektup_net !== undefined ? (parseFloat(it.mektup_net) || 0) : getMektupItemNetKilo(it);
                 const fiyat = parseFloat(it.tuccar_fiyat) || 0;
                 const kasaAdet = parseFloat(it.kasa_adet) || 0;
                 toplamKasa += kasaAdet;
@@ -2049,7 +2120,7 @@
             const firmaTel = state.firma.telefon ? `\n📞 ${state.firma.telefon}` : '';
             let kalemlerText = '', toplamKasa = 0;
             (m.items || []).forEach((it, idx) => {
-                const net = parseFloat(it.net) || 0;
+                const net = it.mektup_net !== undefined ? (parseFloat(it.mektup_net) || 0) : getMektupItemNetKilo(it);
                 const fiyat = parseFloat(it.tuccar_fiyat) || 0;
                 const kasa = parseFloat(it.kasa_adet) || 0;
                 toplamKasa += kasa;
@@ -2106,7 +2177,7 @@
             tbody.innerHTML = '';
 
             editingMektupObj.items.forEach((it, idx) => {
-                const net = parseFloat(it.net) || 0;
+                const net = it.mektup_net !== undefined ? (parseFloat(it.mektup_net) || 0) : getMektupItemNetKilo(it);
                 const fiyat = parseFloat(it.tuccar_fiyat) || 0;
                 tbody.innerHTML += `
                     <tr>
@@ -2128,7 +2199,8 @@
             if (!editingMektupObj) return;
             const fiyat = parseFloat(newVal) || 0;
             editingMektupObj.items[idx].tuccar_fiyat = fiyat;
-            const net = parseFloat(editingMektupObj.items[idx].net) || 0;
+            const it = editingMektupObj.items[idx];
+            const net = it.mektup_net !== undefined ? (parseFloat(it.mektup_net) || 0) : getMektupItemNetKilo(it);
             const rowCell = document.getElementById(`edit-row-total-${idx}`);
             if (rowCell) rowCell.innerText = (net * fiyat).toLocaleString('tr-TR') + ' TL';
             recalcEditedMektupTotal();
@@ -2137,7 +2209,10 @@
         function recalcEditedMektupTotal() {
             if (!editingMektupObj) return;
             let total = 0;
-            editingMektupObj.items.forEach(it => { total += (parseFloat(it.net) || 0) * (parseFloat(it.tuccar_fiyat) || 0); });
+            editingMektupObj.items.forEach(it => {
+                const net = it.mektup_net !== undefined ? (parseFloat(it.mektup_net) || 0) : getMektupItemNetKilo(it);
+                total += net * (parseFloat(it.tuccar_fiyat) || 0);
+            });
             editingMektupObj.toplam_tutar = total;
             document.getElementById('edit-mektup-new-total').innerText = total.toLocaleString('tr-TR') + ' TL';
         }
@@ -2181,7 +2256,6 @@
             editingMektupObj = null;
         }
 
-        // KESİLMİŞ PARTİYİ SİLME + PARTİ NUMARASINI SON DURUMA DÖNDÜRME
         async function deleteArsivMektupById(id) {
             const m = state.kesilenMektuplar.find(x => x.id === id);
             if (!m) return;
@@ -2205,7 +2279,6 @@
             const targetIdSet = new Set(allTargetAlimIds);
             state.alimlar = state.alimlar.filter(a => a.mektup_id !== id && !targetIdSet.has(a.id));
 
-            // Tüccarın aktif partisini kalan son mektuba/partiye göre geri çek
             const { data: { session } } = await db.auth.getSession();
             const uid = session?.user?.id || currentUser.id;
             const restoredPartiNo = computeRestoredPartiNo(m.tuccar, uid);
@@ -2636,7 +2709,7 @@
             document.getElementById('summary-vadeli-toplam').innerText = bekleyenVadeliToplam.toLocaleString('tr-TR') + ' TL';
         }
 
-        // TANIMLAMALAR + MÜSTAHSİL SİLME UYARISI
+        // TANIMLAMALAR
         async function handleAddUrun(e) {
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
@@ -2678,13 +2751,23 @@
             e.preventDefault();
             const { data: { session } } = await db.auth.getSession();
             const name = document.getElementById('def-kasa-name').value.trim();
-            const dara = parseFloat(document.getElementById('def-kasa-dara').value);
-            if (!name || isNaN(dara)) return;
-            const { data, error } = await db.from('kasalar').insert([{ user_id: session?.user?.id || currentUser.id, name, dara }]).select();
+            const mDerz = parseFloat(document.getElementById('def-kasa-mustahsil-derz').value);
+            const tDerz = parseFloat(document.getElementById('def-kasa-tuccar-derz').value);
+            if (!name || isNaN(mDerz) || isNaN(tDerz)) return;
+
+            const payload = {
+                user_id: session?.user?.id || currentUser.id,
+                name,
+                dara: mDerz,
+                mustahsil_derzi: mDerz,
+                tuccar_derzi: tDerz
+            };
+            const { data, error } = await db.from('kasalar').insert([payload]).select();
             if (error) { alert('Hata: ' + error.message); return; }
-            state.kasalar.push(data[0]); populateSelects(); renderTanimListeleri();
+            state.kasalar.push(data[0]); populateSelects(); renderTanimListeleri(); calculateNetKilo();
             document.getElementById('def-kasa-name').value = '';
-            document.getElementById('def-kasa-dara').value = '';
+            document.getElementById('def-kasa-mustahsil-derz').value = '';
+            document.getElementById('def-kasa-tuccar-derz').value = '';
         }
 
         async function deleteTanim(table, id) {
@@ -2755,11 +2838,15 @@
                     if (!error) item.name = newName.trim();
                 }
             } else if (table === 'kasalar') {
+                const currentMDerz = getMustahsilDerzBirim(item);
+                const currentTDerz = getTuccarDerzBirim(item);
                 const newName = prompt('Kasa Adı:', item.name);
-                const newDara = parseFloat(prompt('Kasa Darası (Kg, Örn: 0.35):', formatDecimal(item.dara)));
-                if (newName && !isNaN(newDara)) {
-                    const { error } = await db.from('kasalar').update({ name: newName.trim(), dara: newDara }).eq('id', id);
-                    if (!error) { item.name = newName.trim(); item.dara = newDara; }
+                const newMDerz = parseFloat(prompt('Müstahsil Derzi (Kg, Örn: 2):', formatDecimal(currentMDerz)));
+                const newTDerz = parseFloat(prompt('Tüccar Derzi (Kg, Örn: 1.5):', formatDecimal(currentTDerz)));
+                if (newName && !isNaN(newMDerz) && !isNaN(newTDerz)) {
+                    const upd = { name: newName.trim(), dara: newMDerz, mustahsil_derzi: newMDerz, tuccar_derzi: newTDerz };
+                    const { error } = await db.from('kasalar').update(upd).eq('id', id);
+                    if (!error) Object.assign(item, upd);
                 }
             }
             populateSelects();
@@ -2782,9 +2869,11 @@
                 return `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(t.name)}<small class="text-slate-400">${phone}</small></span><span><button onclick="editTanim('tuccarlar', ${t.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('tuccarlar', ${t.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`;
             }).join('');
 
-            document.getElementById('list-kasa').innerHTML = state.kasalar.map(k =>
-                `<li class="py-1 flex justify-between items-center"><span>${escapeHtml(k.name)} (${formatDecimal(k.dara)} Kg)</span><span><button onclick="editTanim('kasalar', ${k.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`
-            ).join('');
+            document.getElementById('list-kasa').innerHTML = state.kasalar.map(k => {
+                const mDerz = getMustahsilDerzBirim(k);
+                const tDerz = getTuccarDerzBirim(k);
+                return `<li class="py-1 flex justify-between items-center gap-2"><span>${escapeHtml(k.name)} <small class="text-slate-500">(M: ${formatDecimal(mDerz)} / T: ${formatDecimal(tDerz)} Kg)</small></span><span class="shrink-0"><button onclick="editTanim('kasalar', ${k.id})" class="text-blue-600 mr-2"><i class="fa-solid fa-pen"></i></button><button onclick="deleteTanim('kasalar', ${k.id})" class="text-red-600"><i class="fa-solid fa-trash"></i></button></span></li>`;
+            }).join('');
         }
     </script>
 </body>
